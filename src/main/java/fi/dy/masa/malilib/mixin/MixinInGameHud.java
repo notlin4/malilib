@@ -26,8 +26,7 @@ public abstract class MixinInGameHud
         this.layeredDrawer.addLayer(this::malilib_renderGameOverlayLastDrawer);
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/LayeredDrawer;render(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/client/render/RenderTickCounter;)V"))
+    @Inject(method = "render", at = @At(value = "RETURN"))
     private void malilib_onGameOverlayPost(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci)
     {
         ((RenderEventHandler) RenderEventHandler.getInstance()).onRenderGameOverlayPost(context, this.client, tickCounter.getTickDelta(false));
