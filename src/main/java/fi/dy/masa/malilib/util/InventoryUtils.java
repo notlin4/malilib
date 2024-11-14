@@ -795,7 +795,7 @@ public class InventoryUtils
     @Nullable
     public static EnderChestInventory getPlayerEnderItemsFromNbt(@Nonnull NbtCompound nbt, @Nonnull RegistryWrapper.WrapperLookup registry)
     {
-        if (nbt.contains(NbtKeys.ENDER_ITEMS, Constants.NBT.TAG_COMPOUND))
+        if (nbt.contains(NbtKeys.ENDER_ITEMS, Constants.NBT.TAG_LIST))
         {
             EnderChestInventory inv = new EnderChestInventory();
             inv.readNbtList(nbt.getList(NbtKeys.ENDER_ITEMS, Constants.NBT.TAG_COMPOUND), registry);
