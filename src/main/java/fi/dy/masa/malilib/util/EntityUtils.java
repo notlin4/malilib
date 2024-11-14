@@ -188,9 +188,9 @@ public class EntityUtils
      * @param nbt ()
      * @return ()
      */
-    public static Pair<Float, Float> getHealthFromNbt(@Nonnull NbtCompound nbt)
+    public static Pair<Double, Double> getHealthFromNbt(@Nonnull NbtCompound nbt)
     {
-        float health = 0;
+        double health = 0;
         double maxHealth;
 
         if (nbt.contains(NbtKeys.HEALTH, Constants.NBT.TAG_ANY_NUMERIC))
@@ -200,10 +200,10 @@ public class EntityUtils
         maxHealth = getAttributeValueFromNbt(nbt, EntityAttributes.GENERIC_MAX_HEALTH);
         if (maxHealth < 0)
         {
-            maxHealth = (float) 20;
+            maxHealth = 20;
         }
 
-        return Pair.of(health, (float) maxHealth);
+        return Pair.of(health, maxHealth);
     }
 
     /**
@@ -212,10 +212,10 @@ public class EntityUtils
      * @param nbt ()
      * @return ()
      */
-    public static Pair<Float, Float> getSpeedAndJumpStrengthFromNbt(@Nonnull NbtCompound nbt)
+    public static Pair<Double, Double> getSpeedAndJumpStrengthFromNbt(@Nonnull NbtCompound nbt)
     {
-        float moveSpeed = (float) getAttributeValueFromNbt(nbt, EntityAttributes.GENERIC_MOVEMENT_SPEED);
-        float jumpStrength = (float) getAttributeValueFromNbt(nbt, EntityAttributes.GENERIC_JUMP_STRENGTH);
+        double moveSpeed = getAttributeValueFromNbt(nbt, EntityAttributes.MOVEMENT_SPEED);
+        double jumpStrength = getAttributeValueFromNbt(nbt, EntityAttributes.JUMP_STRENGTH);
 
         return Pair.of(moveSpeed, jumpStrength);
     }
