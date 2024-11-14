@@ -147,7 +147,7 @@ public class EntityUtils
         if (type != null && nbt.contains(NbtKeys.ATTRIB, Constants.NBT.TAG_LIST))
         {
             AttributeContainer container = new AttributeContainer(DefaultAttributeRegistry.get((EntityType<? extends LivingEntity>) type));
-            container.readNbt(nbt.getList(NbtKeys.ATTRIB, Constants.NBT.TAG_LIST));
+            container.readNbt(nbt.getList(NbtKeys.ATTRIB, Constants.NBT.TAG_COMPOUND));
             return container;
         }
 
@@ -216,8 +216,15 @@ public class EntityUtils
      */
     public static Pair<Double, Double> getSpeedAndJumpStrengthFromNbt(@Nonnull NbtCompound nbt)
     {
-        double moveSpeed = getAttributeValueFromNbt(nbt, EntityAttributes.MOVEMENT_SPEED);
-        double jumpStrength = getAttributeValueFromNbt(nbt, EntityAttributes.JUMP_STRENGTH);
+        AttributeContainer container = getAttributesFromNbt(nbt);
+        double moveSpeed = 0d;
+        double jumpStrength = 0d;
+
+        if (container != null)
+        {
+            moveSpeed = container.getValue(EntityAttributes.MOVEMENT_SPEED);
+            jumpStrength = container.getValue(EntityAttributes.JUMP_STRENGTH);
+        }
 
         return Pair.of(moveSpeed, jumpStrength);
     }
