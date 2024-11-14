@@ -146,7 +146,9 @@ public class EntityUtils
 
         if (type != null && nbt.contains(NbtKeys.ATTRIB, Constants.NBT.TAG_LIST))
         {
-            return new AttributeContainer(DefaultAttributeRegistry.get((EntityType<? extends LivingEntity>) type));
+            AttributeContainer container = new AttributeContainer(DefaultAttributeRegistry.get((EntityType<? extends LivingEntity>) type));
+            container.readNbt(nbt.getList(NbtKeys.ATTRIB, Constants.NBT.TAG_LIST));
+            return container;
         }
 
         return null;
