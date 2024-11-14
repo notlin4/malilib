@@ -397,20 +397,63 @@ public class InventoryUtils
     }
 
     /**
-     * Checks if the given NBT currently contains any items, using the NBT Items[] interface.
+     * Returns item represented as NBT if the ItemStack has NBT Items present.
      *
-     * @param tag
+     * @param stack
+     * @param registry
      * @return
      */
-    public static boolean hasNbtItems(NbtCompound tag)
+    public static @Nullable NbtCompound stackHasNbtItems(ItemStack stack, @Nonnull DynamicRegistryManager registry)
     {
-        if (tag.contains(NbtKeys.ITEMS, Constants.NBT.TAG_COMPOUND))
+        if (stack.isEmpty() == false)
         {
-            NbtList tagList = tag.getList(NbtKeys.ITEMS, Constants.NBT.TAG_COMPOUND);
-            return !tagList.isEmpty();
+            NbtCompound nbt = (NbtCompound) stack.toNbt(registry);
+
+            if (hasNbtItems(nbt))
+            {
+                return nbt;
+            }
         }
 
-        return false;
+        return null;
+    }
+
+    /**
+     * Checks if the given NBT currently contains any items, using the NBT Items[] interface.
+     *
+     * @param nbt
+     * @return
+     */
+    public static boolean hasNbtItems(NbtCompound nbt)
+    {
+        if (nbt.contains(NbtKeys.ITEMS, Constants.NBT.TAG_COMPOUND))
+        {
+            NbtList tagList = nbt.getList(NbtKeys.ITEMS, Constants.NBT.TAG_COMPOUND);
+            return !tagList.isEmpty();
+        }
+        else if (nbt.contains(NbtKeys.INVENTORY, Constants.NBT.TAG_LIST))
+        {
+            NbtList tagList = nbt.getList(NbtKeys.INVENTORY, Constants.NBT.TAG_COMPOUND);
+            return !tagList.isEmpty();
+        }
+        else if (nbt.contains(NbtKeys.ENDER_ITEMS, Constants.NBT.TAG_LIST))
+        {
+            NbtList tagList = nbt.getList(NbtKeys.ENDER_ITEMS, Constants.NBT.TAG_COMPOUND);
+            return !tagList.isEmpty();
+        }
+        else if (nbt.contains(NbtKeys.ITEM))
+        {
+            return true;
+        }
+        else if (nbt.contains(NbtKeys.ITEM_2))
+        {
+            return true;
+        }
+        else if (nbt.contains(NbtKeys.BOOK))
+        {
+            return true;
+        }
+        else return nbt.contains(NbtKeys.RECORD);
     }
 
     /**
@@ -504,42 +547,6 @@ public class InventoryUtils
                     items.add(opt.get());
                 }
             }
-
-            return items;
-        }
-        else if (nbt.contains(NbtKeys.ITEM))
-        {
-            // item (DecoratedPot, ItemEntity)
-            ItemStack entry = ItemStack.fromNbtOrEmpty(registry, nbt.getCompound(NbtKeys.ITEM));
-            DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
-            items.add(0, entry);
-
-            return items;
-        }
-        else if (nbt.contains(NbtKeys.ITEM_2))
-        {
-            // Item (ItemFrame)
-            ItemStack entry = ItemStack.fromNbtOrEmpty(registry, nbt.getCompound(NbtKeys.ITEM_2));
-            DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
-            items.add(0, entry);
-
-            return items;
-        }
-        else if (nbt.contains(NbtKeys.BOOK))
-        {
-            // Book (Lectern)
-            ItemStack entry = ItemStack.fromNbtOrEmpty(registry, nbt.getCompound(NbtKeys.BOOK));
-            DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
-            items.add(0, entry);
-
-            return items;
-        }
-        else if (nbt.contains(NbtKeys.RECORD))
-        {
-            // RecordItem (Jukebox)
-            ItemStack entry = ItemStack.fromNbtOrEmpty(registry, nbt.getCompound(NbtKeys.RECORD));
-            DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
-            items.add(0, entry);
 
             return items;
         }
