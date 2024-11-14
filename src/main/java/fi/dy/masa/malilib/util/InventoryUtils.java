@@ -407,7 +407,7 @@ public class InventoryUtils
     {
         if (stack.isEmpty() == false)
         {
-            NbtCompound nbt = (NbtCompound) stack.toNbt(registry);
+            NbtCompound nbt = (NbtCompound) stack.encode(registry);
 
             if (hasNbtItems(nbt))
             {

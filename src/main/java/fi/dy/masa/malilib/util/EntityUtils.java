@@ -222,8 +222,8 @@ public class EntityUtils
 
         if (container != null)
         {
-            moveSpeed = container.getValue(EntityAttributes.MOVEMENT_SPEED);
-            jumpStrength = container.getValue(EntityAttributes.JUMP_STRENGTH);
+            moveSpeed = container.getValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+            jumpStrength = container.getValue(EntityAttributes.GENERIC_JUMP_STRENGTH);
         }
 
         return Pair.of(moveSpeed, jumpStrength);
