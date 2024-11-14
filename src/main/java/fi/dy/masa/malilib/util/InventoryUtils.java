@@ -516,12 +516,8 @@ public class InventoryUtils
 
             for (int i = 0; i < list.size(); i++)
             {
-                Optional<ItemStack> opt = ItemStack.fromNbt(registry, list.getCompound(i));
-
-                if (opt.isPresent())
-                {
-                    items.add(opt.get());
-                }
+                final int index = i;
+                ItemStack.fromNbt(registry, list.getCompound(i)).ifPresent(itemStack -> items.set(index, itemStack));
             }
             
             return items;
@@ -533,18 +529,19 @@ public class InventoryUtils
 
             if (slotCount < 0)
             {
-                slotCount = list.size();
+                slotCount = 27;
             }
 
             DefaultedList<ItemStack> items = DefaultedList.ofSize(slotCount, ItemStack.EMPTY);
 
             for (int i = 0; i < list.size(); i++)
             {
-                Optional<ItemStack> opt = ItemStack.fromNbt(registry, list.getCompound(i));
+                NbtCompound entry = list.getCompound(i);
+                int slot = entry.getByte(NbtKeys.SLOT) & 255;
 
-                if (opt.isPresent())
+                if (slot < items.size())
                 {
-                    items.add(opt.get());
+                    items.set(slot, ItemStack.fromNbt(registry, entry).orElse(ItemStack.EMPTY));
                 }
             }
 
