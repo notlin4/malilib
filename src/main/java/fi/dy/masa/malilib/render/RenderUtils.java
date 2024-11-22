@@ -1340,6 +1340,9 @@ public class RenderUtils
             int x = MathHelper.clamp(baseX + 8, 0, screenWidth - props.width);
             int y = MathHelper.clamp(baseY - height, 0, screenHeight - height);
 
+            // Mask items behind the shulker box display, trying to minimize the sharp corners
+            //drawTexturedRect(GuiBase.BG_TEXTURE, x + 1, y + 1, 0, 0, props.width - 2, props.height - 2, drawContext);
+
             color(1f, 1f, 1f, 1f);
             disableDiffuseLighting();
 

@@ -2,78 +2,75 @@ package fi.dy.masa.malilib.config.options;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+
 import net.minecraft.util.math.MathHelper;
+
 import fi.dy.masa.malilib.MaLiLib;
 import fi.dy.masa.malilib.config.ConfigType;
-import fi.dy.masa.malilib.config.IConfigDouble;
+import fi.dy.masa.malilib.config.IConfigFloat;
 import fi.dy.masa.malilib.util.StringUtils;
 
-public class ConfigDouble extends ConfigBase<ConfigDouble> implements IConfigDouble
+public class ConfigFloat extends ConfigBase<ConfigFloat> implements IConfigFloat
 {
-    private final double minValue;
-    private final double maxValue;
-    private final double defaultValue;
-    private double value;
-    private boolean useSlider;
+    protected final float minValue;
+    protected final float maxValue;
+    protected final float defaultValue;
+    protected float value;
+    protected boolean useSlider;
 
-    public ConfigDouble(String name, double defaultValue)
+    public ConfigFloat(String name, float defaultValue)
     {
-        this(name, defaultValue, Double.MIN_VALUE, Double.MAX_VALUE, name+" Comment?", StringUtils.splitCamelCase(name), name);
+        this(name, defaultValue, Float.MIN_VALUE, Float.MAX_VALUE, false, name+" Comment?", StringUtils.splitCamelCase(name), name);
     }
 
-    public ConfigDouble(String name, double defaultValue, String comment)
+    public ConfigFloat(String name, float defaultValue, String comment)
     {
-        this(name, defaultValue, Double.MIN_VALUE, Double.MAX_VALUE, comment, StringUtils.splitCamelCase(name), name);
+        this(name, defaultValue, Float.MIN_VALUE, Float.MAX_VALUE, false, comment, StringUtils.splitCamelCase(name), name);
     }
 
-    public ConfigDouble(String name, double defaultValue, String comment, String prettyName)
+    public ConfigFloat(String name, float defaultValue, String comment, String prettyName)
     {
-        this(name, defaultValue, Double.MIN_VALUE, Double.MAX_VALUE, comment, prettyName, name);
+        this(name, defaultValue, Float.MIN_VALUE, Float.MAX_VALUE, false, comment, prettyName, name);
     }
 
-    public ConfigDouble(String name, double defaultValue, String comment, String prettyName, String translatedName)
+    public ConfigFloat(String name, float defaultValue, String comment, String prettyName, String translatedName)
     {
-        this(name, defaultValue, Double.MIN_VALUE, Double.MAX_VALUE, comment, prettyName, translatedName);
+        this(name, defaultValue, Float.MIN_VALUE, Float.MAX_VALUE, false, comment, prettyName, translatedName);
     }
 
-    public ConfigDouble(String name, double defaultValue, double minValue, double maxValue)
+    public ConfigFloat(String name, float defaultValue, float minValue, float maxValue)
     {
         this(name, defaultValue, minValue, maxValue, false, name+" Comment?", StringUtils.splitCamelCase(name), name);
     }
 
-    public ConfigDouble(String name, double defaultValue, double minValue, double maxValue, String comment)
+    public ConfigFloat(String name, float defaultValue, float minValue, float maxValue, String comment)
     {
         this(name, defaultValue, minValue, maxValue, false, comment, StringUtils.splitCamelCase(name), name);
     }
 
-    public ConfigDouble(String name, double defaultValue, double minValue, double maxValue, String comment, String prettyName)
+    public ConfigFloat(String name, float defaultValue, float minValue, float maxValue, String comment, String prettyName)
     {
         this(name, defaultValue, minValue, maxValue, false, comment, prettyName, name);
     }
 
-    public ConfigDouble(String name, double defaultValue, double minValue, double maxValue, String comment, String prettyName, String translatedName)
-    {
-        this(name, defaultValue, minValue, maxValue, false, comment, prettyName, translatedName);
-    }
-
-    public ConfigDouble(String name, double defaultValue, double minValue, double maxValue, boolean useSlider)
+    public ConfigFloat(String name, float defaultValue, float minValue, float maxValue, boolean useSlider)
     {
         this(name, defaultValue, minValue, maxValue, useSlider, name+" Comment?", StringUtils.splitCamelCase(name), name);
     }
 
-    public ConfigDouble(String name, double defaultValue, double minValue, double maxValue, boolean useSlider, String comment)
+    public ConfigFloat(String name, float defaultValue, float minValue, float maxValue, boolean useSlider, String comment)
     {
         this(name, defaultValue, minValue, maxValue, useSlider, comment, StringUtils.splitCamelCase(name), name);
     }
 
-    public ConfigDouble(String name, double defaultValue, double minValue, double maxValue, boolean useSlider, String comment, String prettyName)
+    public ConfigFloat(String name, float defaultValue, float minValue, float maxValue, boolean useSlider, String comment, String prettyName)
     {
         this(name, defaultValue, minValue, maxValue, useSlider, comment, prettyName, name);
     }
 
-    public ConfigDouble(String name, double defaultValue, double minValue, double maxValue, boolean useSlider, String comment, String prettyName, String translatedName)
+    public ConfigFloat(String name, float defaultValue, float minValue, float maxValue, boolean useSlider, String comment, String prettyName, String translatedName)
     {
-        super(ConfigType.DOUBLE, name, comment, prettyName, translatedName);
+        super(ConfigType.FLOAT, name, comment, prettyName, translatedName);
 
         this.minValue = minValue;
         this.maxValue = maxValue;
@@ -95,21 +92,21 @@ public class ConfigDouble extends ConfigBase<ConfigDouble> implements IConfigDou
     }
 
     @Override
-    public double getDoubleValue()
+    public float getFloatValue()
     {
         return this.value;
     }
 
     @Override
-    public double getDefaultDoubleValue()
+    public float getDefaultFloatValue()
     {
         return this.defaultValue;
     }
 
     @Override
-    public void setDoubleValue(double value)
+    public void setFloatValue(float value)
     {
-        double oldValue = this.value;
+        float oldValue = this.value;
         this.value = this.getClampedValue(value);
 
         if (oldValue != this.value)
@@ -119,18 +116,18 @@ public class ConfigDouble extends ConfigBase<ConfigDouble> implements IConfigDou
     }
 
     @Override
-    public double getMinDoubleValue()
+    public float getMinFloatValue()
     {
         return this.minValue;
     }
 
     @Override
-    public double getMaxDoubleValue()
+    public float getMaxFloatValue()
     {
         return this.maxValue;
     }
 
-    protected double getClampedValue(double value)
+    protected float getClampedValue(float value)
     {
         return MathHelper.clamp(value, this.minValue, this.maxValue);
     }
@@ -146,7 +143,7 @@ public class ConfigDouble extends ConfigBase<ConfigDouble> implements IConfigDou
     {
         try
         {
-            return Double.parseDouble(newValue) != this.defaultValue;
+            return Float.parseFloat(newValue) != this.defaultValue;
         }
         catch (Exception e)
         {
@@ -158,7 +155,7 @@ public class ConfigDouble extends ConfigBase<ConfigDouble> implements IConfigDou
     @Override
     public void resetToDefault()
     {
-        this.setDoubleValue(this.defaultValue);
+        this.setFloatValue(this.defaultValue);
     }
 
     @Override
@@ -178,7 +175,7 @@ public class ConfigDouble extends ConfigBase<ConfigDouble> implements IConfigDou
     {
         try
         {
-            this.setDoubleValue(Double.parseDouble(value));
+            this.setFloatValue(Float.parseFloat(value));
         }
         catch (Exception e)
         {
@@ -193,7 +190,7 @@ public class ConfigDouble extends ConfigBase<ConfigDouble> implements IConfigDou
         {
             if (element.isJsonPrimitive())
             {
-                this.value = this.getClampedValue(element.getAsDouble());
+                this.value = this.getClampedValue(element.getAsFloat());
             }
             else
             {
