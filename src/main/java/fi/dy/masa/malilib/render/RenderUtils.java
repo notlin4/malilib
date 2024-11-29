@@ -1498,6 +1498,7 @@ public class RenderUtils
         return DyeColor.BROWN;
     }
 
+    @SuppressWarnings("deprecation")
     public static void renderModelInGui(int x, int y, BakedModel model, BlockState state, float zLevel)
     {
         if (state.getBlock() == Blocks.AIR)
