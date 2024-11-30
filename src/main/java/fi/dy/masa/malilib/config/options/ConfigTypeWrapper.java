@@ -97,6 +97,24 @@ public class ConfigTypeWrapper implements IConfigBoolean, IConfigDouble, IConfig
         return this.wrappedConfig.getTranslatedName();
     }
 
+    @Override
+    public void setPrettyName(String prettyName)
+    {
+        this.wrappedConfig.setPrettyName(prettyName);
+    }
+
+    @Override
+    public void setTranslatedName(String translatedName)
+    {
+        this.wrappedConfig.setTranslatedName(translatedName);
+    }
+
+    @Override
+    public void setComment(String comment)
+    {
+        this.wrappedConfig.setComment(comment);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void onValueChanged()

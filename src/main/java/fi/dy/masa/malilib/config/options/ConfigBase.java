@@ -66,9 +66,9 @@ public abstract class ConfigBase<T extends IConfigBase> implements IConfigBase, 
         {
             return StringUtils.splitCamelCase(this.getName());
         }
-        if (this.translationPrefix.isEmpty())
+        if (this.prettyName.contains(".") || this.translationPrefix.isEmpty())
         {
-            return this.prettyName;
+            return StringUtils.getTranslatedOrFallback(this.prettyName, StringUtils.splitCamelCase(this.getName()));
         }
 
         return StringUtils.getTranslatedOrFallback(this.prettyName, this.prettyName);
@@ -84,6 +84,11 @@ public abstract class ConfigBase<T extends IConfigBase> implements IConfigBase, 
         }
         if (this.translationPrefix.isEmpty())
         {
+            if (this.comment.contains("."))
+            {
+                return StringUtils.getTranslatedOrFallback(this.comment, StringUtils.splitCamelCase(this.getName())+" Comment?");
+            }
+
             return StringUtils.getTranslatedOrFallback("config.comment." + this.getName().toLowerCase(), this.comment);
         }
 
@@ -130,17 +135,35 @@ public abstract class ConfigBase<T extends IConfigBase> implements IConfigBase, 
     {
         if (this.translatedName.isEmpty())
         {
-            return this.getPrettyName();
+            return this.getName();
         }
 
-        return this.translatedName;
+        if (this.translationPrefix.isEmpty())
+        {
+            if (this.translatedName.contains("."))
+            {
+                return StringUtils.getTranslatedOrFallback(this.translatedName, this.getName());
+            }
+
+            return this.translatedName;
+        }
+
+        return StringUtils.getTranslatedOrFallback(this.translatedName, this.translatedName);
     }
 
+    @Override
+    public void setPrettyName(String prettyName)
+    {
+        this.prettyName = prettyName;
+    }
+
+    @Override
     public void setTranslatedName(String translatedName)
     {
         this.translatedName = translatedName;
     }
 
+    @Override
     public void setComment(String comment)
     {
         this.comment = comment;

@@ -177,6 +177,8 @@
     "malilib.config.test.comment.testLockedConfigList": "[X] testLockedConfigList Comment!",
     "malilib.config.test.comment.testSyncEnable": "Enable the Testing Only 'DataSync' Service",
 
+    "malilib.hotkeys.category.test_hotkeys": "Test hotkeys",
+
     "malilib.gui.label.locked_test.test1": "Test # 1",
     "malilib.gui.label.locked_test.test2": "Test # 2",
     "malilib.gui.label.locked_test.test3": "Test # 3",
