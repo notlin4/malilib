@@ -52,7 +52,16 @@ public abstract class GuiConfigsBase extends GuiListBase<ConfigOptionWrapper, Wi
         if (FabricLoader.getInstance().isModLoaded(MaLiLibReference.MODMENU_ID)) {
             List<EntrypointContainer<ModMenuApi>> entrypointContainers = FabricLoader.getInstance().getEntrypointContainers(MaLiLibReference.MODMENU_ID, ModMenuApi.class)
                     // This will stack overflow if called in <init>()
-                    .stream().filter(mod -> mod.getEntrypoint().getModConfigScreenFactory().create(null) instanceof GuiConfigsBase)
+                    .stream().filter(mod -> {
+                            try {
+                                return mod.getEntrypoint().getModConfigScreenFactory().create(null) instanceof GuiConfigsBase;
+                            }
+                            catch (Exception e)
+                            {
+                                return false;
+                            }
+                        }
+                    )
                     .toList();
             EntrypointContainer<ModMenuApi> thisContainer = entrypointContainers.stream().filter(mod -> {
                 GuiConfigsBase gui = (GuiConfigsBase) mod.getEntrypoint().getModConfigScreenFactory().create(null);
@@ -63,6 +72,7 @@ public abstract class GuiConfigsBase extends GuiListBase<ConfigOptionWrapper, Wi
                 {
                     selectedEntry = thisContainer;
                 }
+
                 @Override
                 protected void setSelectedEntry(int index) {
                     super.setSelectedEntry(index);
