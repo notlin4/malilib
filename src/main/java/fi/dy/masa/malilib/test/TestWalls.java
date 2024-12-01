@@ -1,5 +1,7 @@
 package fi.dy.masa.malilib.test;
 
+import java.util.function.Supplier;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import fi.dy.masa.malilib.MaLiLibConfigs;
 import fi.dy.masa.malilib.render.RenderUtils;
@@ -22,8 +24,9 @@ public class TestWalls implements AutoCloseable
     protected static BufferBuilder BUFFER_2;
     protected static VertexBuffer VERTEX_1;
     protected static VertexBuffer VERTEX_2;
-    protected static ShaderProgramKey SHADER_1 = ShaderProgramKeys.POSITION_COLOR;
-    protected static ShaderProgramKey SHADER_2 = ShaderProgramKeys.POSITION_COLOR;
+    // TODO 1.21.3+
+    //protected static ShaderProgramKey SHADER_1 = ShaderProgramKeys.POSITION_COLOR;
+    //protected static ShaderProgramKey SHADER_2 = ShaderProgramKeys.POSITION_COLOR;
     protected static boolean renderThrough = false;
     protected static boolean useCulling = false;
     protected static float glLineWidth = 1f;
@@ -72,11 +75,15 @@ public class TestWalls implements AutoCloseable
 
         if (VERTEX_1 == null || VERTEX_1.isClosed())
         {
-            VERTEX_1 = new VertexBuffer(GlUsage.STATIC_WRITE);
+            // TODO 1.21.3+
+            //VERTEX_1 = new VertexBuffer(GlUsage.STATIC_WRITE);
+            VERTEX_1 = new VertexBuffer(VertexBuffer.Usage.STATIC);
         }
         if (VERTEX_2 == null || VERTEX_2.isClosed())
         {
-            VERTEX_2 = new VertexBuffer(GlUsage.STATIC_WRITE);
+            // TODO 1.21.3+
+            //VERTEX_2 = new VertexBuffer(GlUsage.STATIC_WRITE);
+            VERTEX_2 = new VertexBuffer(VertexBuffer.Usage.STATIC);
         }
 
         BUFFER_1 = TESSELLATOR_1.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
@@ -188,19 +195,28 @@ public class TestWalls implements AutoCloseable
         if (hasData)
         {
             preRender();
-            drawInternal(matrix4f, projMatrix, VERTEX_1, SHADER_1);
-            drawInternal(matrix4f, projMatrix, VERTEX_2, SHADER_2);
+            // TODO 1.21.3+
+            //drawInternal(matrix4f, projMatrix, VERTEX_1, SHADER_1);
+            //drawInternal(matrix4f, projMatrix, VERTEX_2, SHADER_2);
+            drawInternal(matrix4f, projMatrix, VERTEX_1, GameRenderer::getPositionColorProgram);
+            drawInternal(matrix4f, projMatrix, VERTEX_2, GameRenderer::getPositionColorProgram);
             postRender();
         }
     }
 
-    private static void drawInternal(Matrix4f matrix4f, Matrix4f projMatrix, VertexBuffer vertexBuffer, ShaderProgramKey shaderKey)
+    // TODO 1.21.3+
+    //private static void drawInternal(Matrix4f matrix4f, Matrix4f projMatrix, VertexBuffer vertexBuffer, ShaderProgramKey shaderKey)
+    private static void drawInternal(Matrix4f matrix4f, Matrix4f projMatrix, VertexBuffer vertexBuffer, Supplier<ShaderProgram> shader)
     {
         if (hasData)
         {
-            ShaderProgram shader = RenderSystem.setShader(shaderKey);
+            // TODO 1.21.3+
+            //ShaderProgram shader = RenderSystem.setShader(shaderKey);
+            RenderSystem.setShader(shader);
             vertexBuffer.bind();
-            vertexBuffer.draw(matrix4f, projMatrix, shader);
+            // TODO 1.21.3+
+            //vertexBuffer.draw(matrix4f, projMatrix, shader);
+            vertexBuffer.draw(matrix4f, projMatrix, shader.get());
             VertexBuffer.unbind();
         }
     }

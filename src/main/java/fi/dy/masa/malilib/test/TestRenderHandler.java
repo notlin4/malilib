@@ -6,16 +6,12 @@ import java.util.function.Supplier;
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.block.Block;
-import net.minecraft.block.CrafterBlock;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.CrafterBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.Fog;
-import net.minecraft.client.render.Frustum;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -28,20 +24,14 @@ import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
-import net.minecraft.world.World;
 
-import fi.dy.masa.malilib.MaLiLib;
 import fi.dy.masa.malilib.MaLiLibConfigs;
 import fi.dy.masa.malilib.MaLiLibReference;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.interfaces.IRenderer;
-import fi.dy.masa.malilib.mixin.IMixinAbstractHorseEntity;
 import fi.dy.masa.malilib.render.InventoryOverlay;
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.*;
@@ -68,20 +58,29 @@ public class TestRenderHandler implements IRenderer
     }
 
     @Override
-    public void onRenderWorldLastAdvanced(Matrix4f posMatrix, Matrix4f projMatrix, Frustum frustum, Camera camera, Fog fog, Profiler profiler)
+    public void onRenderWorldLast(Matrix4f posMatrix, Matrix4f projMatrix)
+    // TODO 1.21.3+
+    //public void onRenderWorldLastAdvanced(Matrix4f posMatrix, Matrix4f projMatrix, Frustum frustum, Camera camera, Fog fog, Profiler profiler)
     {
         MinecraftClient mc = MinecraftClient.getInstance();
+        // TODO 1.21-
+        Profiler profiler = mc.getProfiler();
 
         if (mc.player != null)
         {
             profiler.push(this.getProfilerSectionSupplier() + "_render_targeting_overlay");
             this.renderTargetingOverlay(posMatrix, mc);
             profiler.pop();
+
+            // TODO 1.21-
+            this.onRenderWorldTestWalls(posMatrix, projMatrix, mc.gameRenderer.getCamera(), profiler);
         }
     }
 
-    @Override
-    public void onRenderWorldPreWeather(Matrix4f posMatrix, Matrix4f projMatrix, Frustum frustum, Camera camera, Fog fog, Profiler profiler)
+    //@Override
+    // TODO 1.21.3+
+    //public void onRenderWorldPreWeather(Matrix4f posMatrix, Matrix4f projMatrix, Frustum frustum, Camera camera, Fog fog, Profiler profiler)
+    public void onRenderWorldTestWalls(Matrix4f posMatrix, Matrix4f projMatrix, Camera camera, Profiler profiler)
     {
         if (MaLiLibConfigs.Test.TEST_CONFIG_BOOLEAN.getBooleanValue())
         {
@@ -118,7 +117,9 @@ public class TestRenderHandler implements IRenderer
         {
             if (MaLiLibConfigs.Test.TEST_CONFIG_BOOLEAN.getBooleanValue() && GuiBase.isShiftDown())
             {
-                RenderUtils.renderMapPreview(stack, x, y, 160, false, drawContext);
+                // TODO 1.21.3+
+                //RenderUtils.renderMapPreview(stack, x, y, 160, false, drawContext);
+                RenderUtils.renderMapPreview(stack, x, y, 160, false);
             }
         }
         else if (stack.getComponents().contains(DataComponentTypes.CONTAINER) && InventoryUtils.shulkerBoxHasItems(stack))
@@ -451,6 +452,8 @@ public class TestRenderHandler implements IRenderer
                 horseInv.setStack(1, inv.getStack(0));
 
                 InventoryOverlay.renderInventoryBackground(type, xInv, yInv, 1, 2, mc);
+                // TODO 1.21.3+
+                /*
                 if (type == InventoryOverlay.InventoryRenderType.LLAMA)
                 {
                     InventoryOverlay.renderLlamaArmorBackgroundSlots(horseInv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, drawContext);
@@ -459,6 +462,7 @@ public class TestRenderHandler implements IRenderer
                 {
                     InventoryOverlay.renderHorseArmorBackgroundSlots(horseInv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, drawContext);
                 }
+                 */
                 InventoryOverlay.renderInventoryStacks(type, horseInv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, 1, 0, 2, mc, drawContext);
                 xInv += 32 + 4;
             }
@@ -466,10 +470,13 @@ public class TestRenderHandler implements IRenderer
             if (totalSlots > 0)
             {
                 InventoryOverlay.renderInventoryBackground(type, xInv, yInv, props.slotsPerRow, totalSlots, mc);
+                // TODO 1.21.3+
+                /*
                 if (type == InventoryOverlay.InventoryRenderType.BREWING_STAND)
                 {
                     InventoryOverlay.renderBrewerBackgroundSlots(inv, xInv, yInv, drawContext);
                 }
+                 */
                 InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, props.slotsPerRow, firstSlot, totalSlots, lockedSlots, mc, drawContext);
             }
         }
@@ -496,7 +503,8 @@ public class TestRenderHandler implements IRenderer
             ItemStack wolfArmor = ((WolfEntity) entityLivingBase).getBodyArmor();
             wolfInv.setStack(0, wolfArmor != null && !wolfArmor.isEmpty() ? wolfArmor : ItemStack.EMPTY);
             InventoryOverlay.renderInventoryBackground(type, xInv, yInv, 1, 2, mc);
-            InventoryOverlay.renderWolfArmorBackgroundSlots(wolfInv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, drawContext);
+            // TODO 1.21.3+
+            //InventoryOverlay.renderWolfArmorBackgroundSlots(wolfInv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, drawContext);
             InventoryOverlay.renderInventoryStacks(type, wolfInv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, 1, 0, 2, mc, drawContext);
         }
 

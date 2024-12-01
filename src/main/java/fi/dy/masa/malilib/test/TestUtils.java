@@ -32,7 +32,9 @@ public class TestUtils
         int cx = (worldSpawn.getX() >> 4);
         int cz = (worldSpawn.getZ() >> 4);
         int minY = getMinY(world);
-        int maxY = world != null ? world.getTopYInclusive() + 1 : 320;
+        // TODO 1.21.3+
+        //int maxY = world != null ? world.getTopYInclusive() + 1 : 320;
+        int maxY = world != null ? world.getTopY() : 320;
         BlockPos pos1 = new BlockPos( (cx - chunkRange) << 4      , minY,  (cz - chunkRange) << 4);
         BlockPos pos2 = new BlockPos(((cx + chunkRange) << 4) + 15, maxY, ((cz + chunkRange) << 4) + 15);
 
