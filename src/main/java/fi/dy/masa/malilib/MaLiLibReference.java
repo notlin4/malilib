@@ -8,5 +8,5 @@ public class MaLiLibReference
     public static final String MOD_NAME = "MaLiLib";
     public static final String MODMENU_ID = "modmenu";
     public static final String MOD_VERSION = StringUtils.getModVersionString(MOD_ID);
-    public static final boolean DEBUG_MODE = true;
+    public static final boolean DEBUG_MODE = false;
 }

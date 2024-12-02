@@ -166,7 +166,7 @@
     "malilib.config.test.name.testLockedConfigList": "testLockedConfigList /X",
     "malilib.config.test.name.testSyncEnable": "testSyncEnable",
 
-    "malilib.config.test.comment.testBoolean": "[X] testBoolean Comment!",
+    "malilib.config.test.comment.testBoolean": "[X] testBoolean Comment.",
     "malilib.config.test.comment.testBooleanHotkeyed": "[X] testBooleanHotkeyed Comment!",
     "malilib.config.test.comment.testColor": "[X] testColor Comment!",
     "malilib.config.test.comment.testColorList": "[X] testColorList Comment!",

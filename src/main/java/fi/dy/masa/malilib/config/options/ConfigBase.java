@@ -80,7 +80,7 @@ public abstract class ConfigBase<T extends IConfigBase> implements IConfigBase, 
         {
             result = StringUtils.splitCamelCase(this.getName());
         }
-        else if (this.prettyName.contains(".") || this.translationPrefix.isEmpty())
+        else if (this.prettyName.contains(PRETTY_NAME_KEY + ".") || this.translationPrefix.isEmpty())
         {
             result = StringUtils.getTranslatedOrFallback(this.prettyName, StringUtils.splitCamelCase(this.getName()));
         }
@@ -104,7 +104,7 @@ public abstract class ConfigBase<T extends IConfigBase> implements IConfigBase, 
         }
         else if (this.translationPrefix.isEmpty())
         {
-            if (this.comment.contains("."))
+            if (this.comment.contains(COMMENT_KEY + "."))
             {
                 result = StringUtils.getTranslatedOrFallback(this.comment, StringUtils.splitCamelCase(this.getName())+" Comment?");
             }
@@ -169,7 +169,7 @@ public abstract class ConfigBase<T extends IConfigBase> implements IConfigBase, 
         }
         else if (this.translationPrefix.isEmpty())
         {
-            if (this.translatedName.contains("."))
+            if (this.translatedName.contains(TRANSLATED_NAME_KEY + "."))
             {
                 result = StringUtils.getTranslatedOrFallback(this.translatedName, this.getName());
             }
