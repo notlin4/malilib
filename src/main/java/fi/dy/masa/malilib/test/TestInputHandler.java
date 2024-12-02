@@ -1,5 +1,7 @@
 package fi.dy.masa.malilib.test;
 
+import com.google.common.collect.ImmutableList;
+
 import fi.dy.masa.malilib.MaLiLibConfigs;
 import fi.dy.masa.malilib.MaLiLibReference;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
@@ -27,11 +29,17 @@ public class TestInputHandler implements IKeybindProvider
         {
             manager.addKeybindToMap(hotkey.getKeybind());
         }
+
+        for (TestEnumConfig toggle : TestEnumConfig.values())
+        {
+            manager.addKeybindToMap(toggle.getKeybind());
+        }
     }
 
     @Override
     public void addHotkeys(IKeybindManager manager)
     {
         manager.addHotkeysForCategory(MaLiLibReference.MOD_NAME, MaLiLibReference.MOD_ID + ".hotkeys.category.test_hotkeys", MaLiLibConfigs.Test.HOTKEY_LIST);
+        manager.addHotkeysForCategory(MaLiLibReference.MOD_NAME, MaLiLibReference.MOD_ID + ".hotkeys.category.test_enum_hotkeys", ImmutableList.copyOf(TestEnumConfig.values()));
     }
 }

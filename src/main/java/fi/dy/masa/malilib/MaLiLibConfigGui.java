@@ -2,16 +2,21 @@ package fi.dy.masa.malilib;
 
 import java.util.Collections;
 import java.util.List;
+import com.google.common.collect.ImmutableList;
+
 import fi.dy.masa.malilib.config.IConfigBase;
+import fi.dy.masa.malilib.config.options.BooleanHotkeyGuiWrapper;
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
+import fi.dy.masa.malilib.test.TestEnumConfig;
 import fi.dy.masa.malilib.util.StringUtils;
 
 public class MaLiLibConfigGui extends GuiConfigsBase
 {
     private static ConfigGuiTab tab = ConfigGuiTab.GENERIC;
+    public static ImmutableList<TestEnumConfig> TEST_ENUM_LIST = TestEnumConfig.VALUES;
 
     public MaLiLibConfigGui()
     {
@@ -30,9 +35,12 @@ public class MaLiLibConfigGui extends GuiConfigsBase
 
         for (ConfigGuiTab tab : ConfigGuiTab.values())
         {
-            if (!MaLiLibReference.DEBUG_MODE && tab == ConfigGuiTab.TEST)
+            if (!MaLiLibReference.DEBUG_MODE)
             {
-                continue;
+                if (tab == ConfigGuiTab.TEST || tab == ConfigGuiTab.TEST_ENUM)
+                {
+                    continue;
+                }
             }
 
             x += this.createButton(x, y, -1, tab) + 2;
@@ -79,12 +87,21 @@ public class MaLiLibConfigGui extends GuiConfigsBase
         {
             configs = MaLiLibConfigs.Test.OPTIONS;
         }
+        else if (tab == ConfigGuiTab.TEST_ENUM && MaLiLibReference.DEBUG_MODE)
+        {
+            return ConfigOptionWrapper.createFor(TEST_ENUM_LIST.stream().map(this::wrapConfig).toList());
+        }
         else
         {
             return Collections.emptyList();
         }
 
         return ConfigOptionWrapper.createFor(configs);
+    }
+
+    protected BooleanHotkeyGuiWrapper wrapConfig(TestEnumConfig config)
+    {
+        return new BooleanHotkeyGuiWrapper(config.getName(), config, config.getKeybind());
     }
 
     private static class ButtonListener implements IButtonActionListener
@@ -111,9 +128,10 @@ public class MaLiLibConfigGui extends GuiConfigsBase
 
     public enum ConfigGuiTab
     {
-        GENERIC ("malilib.gui.title.generic"),
-        DEBUG   ("malilib.gui.title.debug"),
-        TEST    ("malilib.gui.title.test");
+        GENERIC     ("malilib.gui.title.generic"),
+        DEBUG       ("malilib.gui.title.debug"),
+        TEST        ("malilib.gui.title.test"),
+        TEST_ENUM   ("malilib.gui.title.test_enum");
 
         private final String translationKey;
 
