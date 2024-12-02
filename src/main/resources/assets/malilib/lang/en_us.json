@@ -5,6 +5,7 @@
     "malilib.config.name.enableActionbarMessages": "enableActionbarMessages",
 
     "malilib.config.name.debugMessages": "debugMessages",
+    "malilib.config.name.configElementDebug": "configElementDebug",
     "malilib.config.name.inputCancellationDebugging": "inputCancellationDebugging",
     "malilib.config.name.keybindDebugging": "keybindDebugging",
     "malilib.config.name.keybindDebuggingIngame": "keybindDebuggingIngame",
@@ -21,12 +22,14 @@
     "malilib.config.prettyName.enableActionbarMessages": "Actionbar Messages",
 
     "malilib.config.prettyName.debugMessages": "Debug Messages",
+    "malilib.config.prettyName.configElementDebug": "Config Element Debug",
     "malilib.config.prettyName.inputCancellationDebugging": "Input Cancellation Debugging",
     "malilib.config.prettyName.keybindDebugging": "Keybind Debugging",
     "malilib.config.prettyName.keybindDebuggingIngame": "Keybind Debugging In-Game",
     "malilib.config.prettyName.mouseScrollDebug": "Mouse Scroll Debug",
 
     "malilib.config.comment.debugMessages": "When enabled, debug level events\nare printed to the game console/log",
+    "malilib.config.comment.configElementDebug": "When enabled, individual config element\ncalls are printed to the game console/log",
     "malilib.config.comment.inputCancellationDebugging": "When enabled, then the cancellation reason/source\nfor inputs (keyboard and mouse) is printed out",
     "malilib.config.comment.keybindDebugging": "When enabled, key presses and held keys are\nprinted to the game console (and the action bar, if enabled)",
     "malilib.config.comment.keybindDebuggingIngame": "If enabled, then the messages from 'keybindDebugging'\nare also printed to the in-game action bar",

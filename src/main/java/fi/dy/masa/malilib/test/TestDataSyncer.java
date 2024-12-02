@@ -67,6 +67,7 @@ public class TestDataSyncer
         return null;
     }
 
+    @SuppressWarnings("deprecation")
     public Inventory getBlockInventory(World world, BlockPos pos, boolean useNbt)
     {
         Inventory inv = null;

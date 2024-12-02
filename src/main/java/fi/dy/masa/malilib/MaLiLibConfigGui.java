@@ -30,6 +30,11 @@ public class MaLiLibConfigGui extends GuiConfigsBase
 
         for (ConfigGuiTab tab : ConfigGuiTab.values())
         {
+            if (!MaLiLibReference.DEBUG_MODE && tab == ConfigGuiTab.TEST)
+            {
+                continue;
+            }
+
             x += this.createButton(x, y, -1, tab) + 2;
         }
     }
@@ -70,12 +75,10 @@ public class MaLiLibConfigGui extends GuiConfigsBase
         {
             configs = MaLiLibConfigs.Debug.OPTIONS;
         }
-        /*
-        else if (tab == ConfigGuiTab.TEST)
+        else if (tab == ConfigGuiTab.TEST && MaLiLibReference.DEBUG_MODE)
         {
             configs = MaLiLibConfigs.Test.OPTIONS;
         }
-         */
         else
         {
             return Collections.emptyList();
@@ -109,12 +112,12 @@ public class MaLiLibConfigGui extends GuiConfigsBase
     public enum ConfigGuiTab
     {
         GENERIC ("malilib.gui.title.generic"),
-        DEBUG   ("malilib.gui.title.debug");
-        //TEST ("malilib.gui.title.test");
+        DEBUG   ("malilib.gui.title.debug"),
+        TEST    ("malilib.gui.title.test");
 
         private final String translationKey;
 
-        private ConfigGuiTab(String translationKey)
+        ConfigGuiTab(String translationKey)
         {
             this.translationKey = translationKey;
         }

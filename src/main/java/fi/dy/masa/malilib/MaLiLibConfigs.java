@@ -13,6 +13,8 @@ import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.IConfigValue;
 import fi.dy.masa.malilib.config.options.*;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
+import fi.dy.masa.malilib.test.ConfigTestLockedList;
+import fi.dy.masa.malilib.test.ConfigTestOptList;
 import fi.dy.masa.malilib.util.Color4f;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
@@ -41,6 +43,7 @@ public class MaLiLibConfigs implements IConfigHandler
     public static class Debug
     {
         public static final ConfigBoolean DEBUG_MESSAGES            = new ConfigBoolean("debugMessages",false).apply(DEBUG_KEY);
+        public static final ConfigBoolean CONFIG_ELEMENT_DEBUG      = new ConfigBoolean("configElementDebug", false).apply(DEBUG_KEY);
         public static final ConfigBoolean INPUT_CANCELLATION_DEBUG  = new ConfigBoolean("inputCancellationDebugging", false).apply(DEBUG_KEY);
         public static final ConfigBoolean KEYBIND_DEBUG             = new ConfigBoolean("keybindDebugging", false).apply(DEBUG_KEY);
         public static final ConfigBoolean KEYBIND_DEBUG_ACTIONBAR   = new ConfigBoolean("keybindDebuggingIngame", false).apply(DEBUG_KEY);
@@ -48,6 +51,7 @@ public class MaLiLibConfigs implements IConfigHandler
 
         public static final ImmutableList<IConfigValue> OPTIONS = ImmutableList.of(
                 DEBUG_MESSAGES,
+                CONFIG_ELEMENT_DEBUG,
                 INPUT_CANCELLATION_DEBUG,
                 KEYBIND_DEBUG,
                 KEYBIND_DEBUG_ACTIONBAR,
@@ -67,10 +71,10 @@ public class MaLiLibConfigs implements IConfigHandler
         public static final ConfigFloat             TEST_CONFIG_FLOAT               = new ConfigFloat("testFloat", 0.5f, 0.0f, 1.0f, true, "Test Float").apply(TEST_KEY);
         public static final ConfigHotkey            TEST_CONFIG_HOTKEY              = new ConfigHotkey("testHotkey", "", "Test Hotkey").apply(TEST_KEY);
         public static final ConfigInteger           TEST_CONFIG_INTEGER             = new ConfigInteger("testInteger", 0, "Test Integer").apply(TEST_KEY);
-        //public static final ConfigOptionList        TEST_CONFIG_OPTIONS_LIST        = new ConfigOptionList("testOptionList", ConfigTestOptList.TEST1, "Test Option List").apply(TEST_KEY);
+        public static final ConfigOptionList        TEST_CONFIG_OPTIONS_LIST        = new ConfigOptionList("testOptionList", ConfigTestOptList.TEST1, "Test Option List").apply(TEST_KEY);
         public static final ConfigString            TEST_CONFIG_STRING              = new ConfigString("testString", "testString", "Test String").apply(TEST_KEY);
         public static final ConfigStringList        TEST_CONFIG_STRING_LIST         = new ConfigStringList("testStringList", ImmutableList.of("testString1", "testString2"), "Test String List").apply(TEST_KEY);
-        //public static final ConfigLockedList        TEST_CONFIG_LOCKED_LIST         = new ConfigLockedList("testLockedConfigList", ConfigTestLockedList.INSTANCE, "Test Locked List").apply(TEST_KEY);
+        public static final ConfigLockedList        TEST_CONFIG_LOCKED_LIST         = new ConfigLockedList("testLockedConfigList", ConfigTestLockedList.INSTANCE, "Test Locked List").apply(TEST_KEY);
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 TEST_CONFIG_BOOLEAN,
@@ -81,10 +85,10 @@ public class MaLiLibConfigs implements IConfigHandler
                 TEST_CONFIG_FLOAT,
                 TEST_CONFIG_HOTKEY,
                 TEST_CONFIG_INTEGER,
-                //TEST_CONFIG_OPTIONS_LIST,
+                TEST_CONFIG_OPTIONS_LIST,
                 TEST_CONFIG_STRING,
-                TEST_CONFIG_STRING_LIST
-                //TEST_CONFIG_LOCKED_LIST
+                TEST_CONFIG_STRING_LIST,
+                TEST_CONFIG_LOCKED_LIST
         );
 
         public static final List<IHotkey> HOTKEY_LIST = ImmutableList.of(
@@ -107,7 +111,11 @@ public class MaLiLibConfigs implements IConfigHandler
 
                 ConfigUtils.readConfigBase(root, "Generic", Generic.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Debug", Debug.OPTIONS);
-                //ConfigUtils.readConfigBase(root, "Test", Test.OPTIONS);
+
+                if (MaLiLibReference.DEBUG_MODE)
+                {
+                    ConfigUtils.readConfigBase(root, "Test", Test.OPTIONS);
+                }
             }
         }
     }
@@ -122,7 +130,11 @@ public class MaLiLibConfigs implements IConfigHandler
 
             ConfigUtils.writeConfigBase(root, "Generic", Generic.OPTIONS);
             ConfigUtils.writeConfigBase(root, "Debug", Debug.OPTIONS);
-            //ConfigUtils.writeConfigBase(root, "Test", Test.OPTIONS);
+
+            if (MaLiLibReference.DEBUG_MODE)
+            {
+                ConfigUtils.writeConfigBase(root, "Test", Test.OPTIONS);
+            }
 
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
         }

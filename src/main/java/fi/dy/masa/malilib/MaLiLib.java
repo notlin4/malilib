@@ -17,7 +17,7 @@ public class MaLiLib implements ModInitializer
 
     public static void printDebug(String key, Object... args)
     {
-        if (MaLiLibConfigs.Debug.DEBUG_MESSAGES.getBooleanValue())
+        if (MaLiLibReference.DEBUG_MODE || MaLiLibConfigs.Debug.DEBUG_MESSAGES.getBooleanValue())
         {
             logger.info(key, args);
         }
