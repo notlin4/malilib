@@ -66,7 +66,7 @@ public class InventoryOverlay
     public static final Identifier TEXTURE_EMPTY_SHIELD     = Identifier.ofVanilla("item/empty_armor_slot_shield");
     public static final Identifier TEXTURE_LOCKED_SLOT      = Identifier.ofVanilla("container/crafter/disabled_slot");
 
-    // Additional Empty Slot Textures (1.21.2+)
+    // Additional Empty Slot Textures
     public static final Identifier TEXTURE_EMPTY_HORSE_ARMOR = Identifier.ofVanilla("container/horse/armor_slot");
     public static final Identifier TEXTURE_EMPTY_LLAMA_ARMOR = Identifier.ofVanilla("container/horse/llama_armor_slot");
     public static final Identifier TEXTURE_EMPTY_SADDLE      = Identifier.ofVanilla("container/horse/saddle_slot");
