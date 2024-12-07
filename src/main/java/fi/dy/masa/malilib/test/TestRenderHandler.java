@@ -41,8 +41,6 @@ import fi.dy.masa.malilib.util.*;
 
 public class TestRenderHandler implements IRenderer
 {
-    private boolean wasHeld = false;
-
     @Override
     public void onRenderGameOverlayLastDrawer(DrawContext drawContext, float partialTicks, Profiler profiler, MinecraftClient mc)
     {
@@ -81,12 +79,7 @@ public class TestRenderHandler implements IRenderer
             MinecraftClient mc = MinecraftClient.getInstance();
 
             profiler.push(this.getProfilerSectionSupplier() + "_test_walls");
-            if (wasHeld && !GuiBase.isShiftDown())
-            {
-                TestWalls.clear();
-                wasHeld = false;
-            }
-            else if (GuiBase.isShiftDown())
+            if (TestEnumConfig.TEST_WALLS_HOTKEY.getBooleanValue())
             {
                 if (TestWalls.needsUpdate(camera.getBlockPos()))
                 {
@@ -96,7 +89,6 @@ public class TestRenderHandler implements IRenderer
 
                 profiler.swap(this.getProfilerSectionSupplier() + "_test_walls_draw");
                 TestWalls.draw(camera.getPos(), posMatrix, projMatrix, mc, profiler);
-                wasHeld = true;
             }
             profiler.pop();
         }

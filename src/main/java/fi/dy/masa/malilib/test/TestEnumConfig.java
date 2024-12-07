@@ -22,7 +22,8 @@ import fi.dy.masa.malilib.util.StringUtils;
 public enum TestEnumConfig implements IHotkeyTogglable, IConfigNotifiable<IConfigBoolean>
 {
     TEST_ENUM_CONFIG        ("testEnumConfig",      false,""),
-    TEST_ENUM_SINGLE_PLAYER ("testEnumSinglePlayer",false,true, "");
+    TEST_ENUM_SINGLE_PLAYER ("testEnumSinglePlayer",false,true, ""),
+    TEST_WALLS_HOTKEY       ("testWallsHotkey",     false,"");
 
     private final static String TEST_ENUM_KEY = MaLiLibReference.MOD_ID + ".config.test_enum";
 
