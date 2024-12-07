@@ -73,7 +73,7 @@ public class InventoryOverlay
     // Brewer Slots (1.21.4+)
     public static final Identifier TEXTURE_EMPTY_BREWER_FUEL = Identifier.ofVanilla("container/slot/brewing_fuel");
     public static final Identifier TEXTURE_EMPTY_POTION      = Identifier.ofVanilla("container/slot/potion");
-    // Other Misc Empty Slots
+    // Other Misc Empty Slots (1.21.3-)
     public static final Identifier TEXTURE_EMPTY_SLOT_AMETHYST   = Identifier.ofVanilla("item/empty_slot_amethyst_shard");
     public static final Identifier TEXTURE_EMPTY_SLOT_AXE        = Identifier.ofVanilla("item/empty_slot_axe");
     public static final Identifier TEXTURE_EMPTY_SLOT_DIAMOND    = Identifier.ofVanilla("item/empty_slot_diamond");
@@ -95,10 +95,12 @@ public class InventoryOverlay
 
     private static final Identifier[] EMPTY_SLOT_TEXTURES = new Identifier[]
     {
+        // 1.21.3-
         Identifier.ofVanilla("item/empty_armor_slot_boots"),
         Identifier.ofVanilla("item/empty_armor_slot_leggings"),
         Identifier.ofVanilla("item/empty_armor_slot_chestplate"),
         Identifier.ofVanilla("item/empty_armor_slot_helmet")
+        // 1.21.4+
 /*
         Identifier.ofVanilla("container/slot/boots"),
         Identifier.ofVanilla("container/slot/leggings"),
