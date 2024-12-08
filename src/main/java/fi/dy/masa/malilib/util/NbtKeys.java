@@ -71,6 +71,7 @@ public class NbtKeys
     public static final String COLOR               = "Color";
     public static final String BUCKET_VARIANT      = "BucketVariantTag";
     public static final String RABBIT_TYPE         = "RabbitType";
+    public static final String STRENGTH            = "Strength";
     public static final String EXP_LEVEL           = "XpLevel";
     public static final String EXP_TOTAL           = "XpTotal";
     public static final String EXP_PROGRESS        = "XpP";
