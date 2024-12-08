@@ -204,7 +204,7 @@ public class ConfigTypeWrapper implements IConfigBoolean, IConfigDouble, IConfig
         }
         catch (Exception e)
         {
-            MaLiLib.logger.warn("Failed to set the config value for '{}' from string '{}'", this.getName(), value, e);
+            MaLiLib.LOGGER.warn("Failed to set the config value for '{}' from string '{}'", this.getName(), value, e);
         }
     }
 
@@ -320,7 +320,7 @@ public class ConfigTypeWrapper implements IConfigBoolean, IConfigDouble, IConfig
         }
         catch (Exception e)
         {
-            MaLiLib.logger.warn("Failed to reset config value for {}", this.getName(), e);
+            MaLiLib.LOGGER.warn("Failed to reset config value for {}", this.getName(), e);
         }
     }
 
@@ -508,7 +508,7 @@ public class ConfigTypeWrapper implements IConfigBoolean, IConfigDouble, IConfig
         }
         catch (Exception e)
         {
-            MaLiLib.logger.warn("Failed to read config value for {} from the JSON config", this.getName(), e);
+            MaLiLib.LOGGER.warn("Failed to read config value for {} from the JSON config", this.getName(), e);
         }
     }
 

@@ -43,6 +43,14 @@ public class MaLiLibConfigGui extends GuiConfigsBase
                 }
             }
 
+            if (!MaLiLibReference.EXPERIMENTAL_MODE)
+            {
+                if (tab == ConfigGuiTab.EXPERIMENTAL)
+                {
+                    continue;
+                }
+            }
+
             x += this.createButton(x, y, -1, tab) + 2;
         }
     }
@@ -91,6 +99,10 @@ public class MaLiLibConfigGui extends GuiConfigsBase
         {
             return ConfigOptionWrapper.createFor(TEST_ENUM_LIST.stream().map(this::wrapConfig).toList());
         }
+        else if (tab == ConfigGuiTab.EXPERIMENTAL && MaLiLibReference.EXPERIMENTAL_MODE)
+        {
+            configs = MaLiLibConfigs.Experimental.OPTIONS;
+        }
         else
         {
             return Collections.emptyList();
@@ -128,10 +140,11 @@ public class MaLiLibConfigGui extends GuiConfigsBase
 
     public enum ConfigGuiTab
     {
-        GENERIC     ("malilib.gui.title.generic"),
-        DEBUG       ("malilib.gui.title.debug"),
-        TEST        ("malilib.gui.title.test"),
-        TEST_ENUM   ("malilib.gui.title.test_enum");
+        GENERIC      ("malilib.gui.title.generic"),
+        DEBUG        ("malilib.gui.title.debug"),
+        TEST         ("malilib.gui.title.test"),
+        TEST_ENUM    ("malilib.gui.title.test_enum"),
+        EXPERIMENTAL ("malilib.gui.title.experimental");
 
         private final String translationKey;
 

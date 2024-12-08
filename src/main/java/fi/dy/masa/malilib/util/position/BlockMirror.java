@@ -4,6 +4,8 @@ import javax.annotation.Nullable;
 
 import org.jetbrains.annotations.ApiStatus;
 
+import net.minecraft.util.math.Direction;
+
 import fi.dy.masa.malilib.MaLiLibReference;
 import fi.dy.masa.malilib.util.StringUtils;
 

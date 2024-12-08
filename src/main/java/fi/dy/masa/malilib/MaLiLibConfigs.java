@@ -16,9 +16,9 @@ import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.test.ConfigTestLockedList;
 import fi.dy.masa.malilib.test.ConfigTestOptList;
 import fi.dy.masa.malilib.test.TestEnumConfig;
-import fi.dy.masa.malilib.util.Color4f;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
+import fi.dy.masa.malilib.util.Color4f;
 
 public class MaLiLibConfigs implements IConfigHandler
 {
@@ -53,6 +53,7 @@ public class MaLiLibConfigs implements IConfigHandler
         public static final ConfigBoolean KEYBIND_DEBUG             = new ConfigBoolean("keybindDebugging", false).apply(DEBUG_KEY);
         public static final ConfigBoolean KEYBIND_DEBUG_ACTIONBAR   = new ConfigBoolean("keybindDebuggingIngame", false).apply(DEBUG_KEY);
         public static final ConfigBoolean MOUSE_SCROLL_DEBUG        = new ConfigBoolean("mouseScrollDebug", false).apply(DEBUG_KEY);
+        public static final ConfigBoolean PRINT_TRANSLATION_KEYS    = new ConfigBoolean("printTranslationKeys", false).apply(DEBUG_KEY);
 
         public static final ImmutableList<IConfigValue> OPTIONS = ImmutableList.of(
                 DEBUG_MESSAGES,
@@ -60,7 +61,8 @@ public class MaLiLibConfigs implements IConfigHandler
                 INPUT_CANCELLATION_DEBUG,
                 KEYBIND_DEBUG,
                 KEYBIND_DEBUG_ACTIONBAR,
-                MOUSE_SCROLL_DEBUG
+                MOUSE_SCROLL_DEBUG,
+                PRINT_TRANSLATION_KEYS
         );
 
         public static final List<IHotkey> HOTKEY_LIST = ImmutableList.of(
@@ -103,6 +105,12 @@ public class MaLiLibConfigs implements IConfigHandler
         );
     }
 
+    private static final String EXPERIMENTAL_KEY = MaLiLibReference.MOD_ID+".config.experimental";
+    public static class Experimental
+    {
+        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+        );
+    }
 
     public static void loadFromFile()
     {
@@ -124,6 +132,11 @@ public class MaLiLibConfigs implements IConfigHandler
                     ConfigUtils.readConfigBase(root, "Test", Test.OPTIONS);
                     ConfigUtils.readHotkeyToggleOptions(root, "TestEnumHotkeys", "TestEnumToggles", TestEnumConfig.VALUES);
                 }
+
+                if (MaLiLibReference.EXPERIMENTAL_MODE)
+                {
+                    ConfigUtils.readConfigBase(root, "Experimental", Experimental.OPTIONS);
+                }
             }
         }
     }
@@ -143,6 +156,11 @@ public class MaLiLibConfigs implements IConfigHandler
             {
                 ConfigUtils.writeConfigBase(root, "Test", Test.OPTIONS);
                 ConfigUtils.writeHotkeyToggleOptions(root, "TestEnumHotkeys", "TestEnumToggles", TestEnumConfig.VALUES);
+            }
+
+            if (MaLiLibReference.EXPERIMENTAL_MODE)
+            {
+                ConfigUtils.writeConfigBase(root, "Experimental", Experimental.OPTIONS);
             }
 
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));

@@ -12,17 +12,16 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 
 import fi.dy.masa.malilib.util.BlockUtils;
 import fi.dy.masa.malilib.util.LayerRange;
 import fi.dy.masa.malilib.util.MathUtils;
-import fi.dy.masa.malilib.util.game.wrap.EntityWrap;
-import fi.dy.masa.malilib.util.position.BlockPos;
-import fi.dy.masa.malilib.util.position.Direction;
-import fi.dy.masa.malilib.util.position.Vec3d;
 
 /**
  * Post-ReWrite code
@@ -45,12 +44,12 @@ public class RayTraceUtils
                                                   RayTraceFluidHandling fluidHandling,
                                                   boolean includeEntities, double maxRange)
     {
-        Vec3d eyesPos = EntityWrap.getEntityEyePos(entity);
-        Vec3d rangedLook = EntityWrap.getScaledLookVector(entity, maxRange);
-        Vec3d lookEndPos = eyesPos.add(rangedLook);
-        //Vec3d eyesPos = entity.getEyePos();
-        //Vec3d rangedLook = MathUtils.scale(MathUtils.getRotationVector(entity.getYaw(), entity.getPitch()), maxRange).toVanilla();
+        //Vec3d eyesPos = EntityWrap.getEntityEyePos(entity);
+        //Vec3d rangedLook = EntityWrap.getScaledLookVector(entity, maxRange);
         //Vec3d lookEndPos = eyesPos.add(rangedLook);
+        Vec3d eyesPos = entity.getEyePos();
+        Vec3d rangedLook = MathUtils.scale(MathUtils.getRotationVector(entity.getYaw(), entity.getPitch()), maxRange);
+        Vec3d lookEndPos = eyesPos.add(rangedLook);
 
         HitResult result = rayTraceBlocks(world, eyesPos, lookEndPos, fluidHandling, false, false, null, 1000);
 
@@ -61,7 +60,7 @@ public class RayTraceUtils
             List<Entity> list = world.getOtherEntities(entity, bb);
 
             double closest = result != null && result.getType() == HitResult.Type.BLOCK ?
-                             eyesPos.squareDistanceTo(result.getPos()) : Double.MAX_VALUE;
+                             eyesPos.squaredDistanceTo(result.getPos()) : Double.MAX_VALUE;
             HitResult entityTrace = null;
             Entity targetEntity = null;
 
@@ -69,12 +68,12 @@ public class RayTraceUtils
             {
                 bb = entityTmp.getBoundingBox();
                 //HitResult traceTmp = bb.calculateIntercept(eyesPos, lookEndPos);
-                Optional<net.minecraft.util.math.Vec3d> opt = bb.raycast(eyesPos.toVanilla(), lookEndPos.toVanilla());
+                Optional<net.minecraft.util.math.Vec3d> opt = bb.raycast(eyesPos, lookEndPos);
 
                 if (opt.isPresent())
                 {
                     HitResult traceTmp = new EntityHitResult(entityTmp, opt.get());
-                    double distance = eyesPos.squareDistanceTo(traceTmp.getPos());
+                    double distance = eyesPos.squaredDistanceTo(traceTmp.getPos());
 
                     if (distance < closest)
                     {
@@ -92,7 +91,7 @@ public class RayTraceUtils
             }
         }
 
-        if (result == null || eyesPos.distanceTo(Vec3d.of(result.getPos())) > maxRange)
+        if (result == null || eyesPos.distanceTo(result.getPos()) > maxRange)
         {
             result = null;
         }
@@ -171,7 +170,7 @@ public class RayTraceUtils
         {
             Vec3d pos = new Vec3d(data.currentX, data.currentY, data.currentZ);
             //return new HitResult(HitResult.Type.MISS, data.mutablePos.toImmutable(), data.facing, pos, null);
-            return BlockHitResult.createMissed(pos.toVanilla(), data.facing.getVanillaDirection(), data.mutablePos.toImmutable());
+            return BlockHitResult.createMissed(pos, data.facing, data.mutablePos.toImmutable());
         }
 
         return null;
@@ -194,7 +193,7 @@ public class RayTraceUtils
                     //HitResult traceTmp = state.collisionRayTrace(world, data.mutablePos.toImmutable(),
                                                                       //data.start, data.end);
 
-                    HitResult traceTmp = state.getRaycastShape(world, data.mutablePos.toImmutable()).raycast(data.start.toVanilla(), data.end.toVanilla(), data.mutablePos.toImmutable());
+                    HitResult traceTmp = state.getRaycastShape(world, data.mutablePos.toImmutable()).raycast(data.start, data.end, data.mutablePos.toImmutable());
 
                     if (traceTmp != null)
                     {
@@ -415,7 +414,7 @@ public class RayTraceUtils
                                                              //this.start, this.end);
 
                 // ? state.getFluidState().getShape(world, this.mutablePos);
-                HitResult traceTmp = state.getRaycastShape(world, this.mutablePos).raycast(this.start.toVanilla(), this.end.toVanilla(), this.mutablePos);
+                HitResult traceTmp = state.getRaycastShape(world, this.mutablePos).raycast(this.start, this.end, this.mutablePos);
 
                 if (traceTmp != null)
                 {

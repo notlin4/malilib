@@ -5,7 +5,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * Post-ReWrite code
+ */
+@ApiStatus.Experimental
 public class ListUtils
 {
     /**

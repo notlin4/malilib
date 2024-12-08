@@ -3,9 +3,8 @@ package fi.dy.masa.malilib.util.game;
 import org.jetbrains.annotations.ApiStatus;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import fi.dy.masa.malilib.util.position.BlockPos;
 
 /**
  * Post-ReWrite code

@@ -282,7 +282,7 @@ public class RayTraceUtils
             }
         }
 
-        MaLiLib.logger.warn("getTarget():3: pos [{}], inv [{}], be [{}], nbt [{}]", pos.toShortString(), inv != null, be != null, nbt != null ? nbt.getString("id") : new NbtCompound());
+        MaLiLib.LOGGER.warn("getTarget():3: pos [{}], inv [{}], be [{}], nbt [{}]", pos.toShortString(), inv != null, be != null, nbt != null ? nbt.getString("id") : new NbtCompound());
 
         if (inv == null || nbt == null)
         {
@@ -326,7 +326,7 @@ public class RayTraceUtils
         {
             Inventory inv2;
 
-            MaLiLib.logger.warn("getTargetInventoryFromEntity(): rawNbt: [{}]", nbt.toString());
+            MaLiLib.LOGGER.warn("getTargetInventoryFromEntity(): rawNbt: [{}]", nbt.toString());
 
             // Fix for empty horse inv
             if (inv != null &&
@@ -368,7 +368,7 @@ public class RayTraceUtils
                 }
             }
 
-            MaLiLib.logger.error("getTargetInventoryFromEntity(): inv.size [{}], inv2.size [{}]", inv != null ? inv.size() : "null", inv2 != null ? inv2.size() : "null");
+            MaLiLib.LOGGER.error("getTargetInventoryFromEntity(): inv.size [{}], inv2.size [{}]", inv != null ? inv.size() : "null", inv2 != null ? inv2.size() : "null");
 
             if (inv2 != null)
             {

@@ -2,8 +2,8 @@ package fi.dy.masa.malilib.util;
 
 import org.jetbrains.annotations.ApiStatus;
 
-import fi.dy.masa.malilib.util.position.Vec3d;
-import fi.dy.masa.malilib.util.position.Vec3i;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 /**
  * Post-ReWrite code
@@ -508,5 +508,11 @@ public class MathUtils
         }
 
         return log2DeBruijn(value) - 1;
+    }
+
+    // TODO until util.position.Vec3d gets added (RayTraceUtils)
+    public static Vec3d scale(Vec3d vec, double factor)
+    {
+        return new Vec3d(vec.x * factor, vec.y * factor, vec.z * factor);
     }
 }

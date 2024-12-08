@@ -2,6 +2,8 @@ package fi.dy.masa.malilib.util.position;
 
 import org.jetbrains.annotations.ApiStatus;
 
+import net.minecraft.util.math.Direction;
+
 import fi.dy.masa.malilib.MaLiLibReference;
 import fi.dy.masa.malilib.util.StringUtils;
 
@@ -53,9 +55,9 @@ public enum BlockRotation
         {
             switch(this)
             {
-                case CW_90:     return direction.rotateY();
+                case CW_90:     return direction.rotateYClockwise();
                 case CW_180:    return direction.getOpposite();
-                case CCW_90:    return direction.rotateYCCW();
+                case CCW_90:    return direction.rotateYCounterclockwise();
             }
         }
 

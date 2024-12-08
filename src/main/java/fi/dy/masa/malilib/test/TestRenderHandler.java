@@ -383,8 +383,8 @@ public class TestRenderHandler implements IRenderer
         int x = xCenter - 52 / 2;
         int y = yCenter - 92;
 
-        MaLiLib.logger.error("0: -> inv.type [{}] // nbt.type [{}]", context.inv() != null ? InventoryOverlay.getInventoryType(context.inv()) : null, context.nbt() != null ? InventoryOverlay.getInventoryType(context.nbt()) : null);
-        MaLiLib.logger.error("1: -> inv.size [{}] // inv.isEmpty [{}]", context.inv() != null ? context.inv().size() : -1, context.inv() != null ? context.inv().isEmpty() : -1);
+        MaLiLib.LOGGER.error("0: -> inv.type [{}] // nbt.type [{}]", context.inv() != null ? InventoryOverlay.getInventoryType(context.inv()) : null, context.nbt() != null ? InventoryOverlay.getInventoryType(context.nbt()) : null);
+        MaLiLib.LOGGER.error("1: -> inv.size [{}] // inv.isEmpty [{}]", context.inv() != null ? context.inv().size() : -1, context.inv() != null ? context.inv().isEmpty() : -1);
 
         if (inv != null && inv.size() > 0)
         {
@@ -429,7 +429,7 @@ public class TestRenderHandler implements IRenderer
                 RenderUtils.setShulkerboxBackgroundTintColor(sbb, true);
             }
 
-            MaLiLib.logger.warn("render():0: type [{}] // Nbt Type [{}]", type.toString(), context.nbt() != null ? InventoryOverlay.getInventoryType(context.nbt()) : "INVALID");
+            MaLiLib.LOGGER.warn("render():0: type [{}] // Nbt Type [{}]", type.toString(), context.nbt() != null ? InventoryOverlay.getInventoryType(context.nbt()) : "INVALID");
 
             if (isHorse)
             {

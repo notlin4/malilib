@@ -1,4 +1,4 @@
-package fi.dy.masa.malilib.util.game.wrap;
+package fi.dy.masa.malilib.util.data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +50,7 @@ public class ResourceLocation
     {
         List<ResourceLocation> newList = new ArrayList<>();
 
-        list.forEach((id) ->
-                             newList.add(ResourceLocation.of(id)));
+        list.forEach((id) -> newList.add(ResourceLocation.of(id)));
 
         return newList;
     }

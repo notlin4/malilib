@@ -58,7 +58,7 @@ public abstract class ConfigBase<T extends IConfigBase> implements IConfigBase, 
 
         if (CONFIG_TYPE_DEBUG)
         {
-            MaLiLib.logger.info("NEW CONFIG: [{}]", this.toString());
+            MaLiLib.LOGGER.info("NEW CONFIG: [{}]", this.toString());
         }
     }
 
@@ -151,7 +151,7 @@ public abstract class ConfigBase<T extends IConfigBase> implements IConfigBase, 
         else
         {
             this.translationPrefix = "";
-            MaLiLib.logger.error("ConfigBase: Failed to apply Translations Prefix for config named [{}].", this.getName());
+            MaLiLib.LOGGER.error("ConfigBase: Failed to apply Translations Prefix for config named [{}].", this.getName());
         }
 
         this.printConfigElementDebug(this.type, "apply", "", this.translationPrefix);
@@ -220,7 +220,7 @@ public abstract class ConfigBase<T extends IConfigBase> implements IConfigBase, 
     {
         if (CONFIG_TYPE_DEBUG || (MaLiLibConfigs.Debug.CONFIG_ELEMENT_DEBUG != null && MaLiLibConfigs.Debug.CONFIG_ELEMENT_DEBUG.getBooleanValue()))
         {
-            MaLiLib.logger.info("CONFIG: type [{}], element [{}], oldStr [{}], newStr [{}]", type.name(), element, oldStr, newStr);
+            MaLiLib.LOGGER.info("CONFIG: type [{}], element [{}], oldStr [{}], newStr [{}]", type.name(), element, oldStr, newStr);
         }
     }
 
