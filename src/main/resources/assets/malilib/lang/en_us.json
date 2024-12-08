@@ -12,7 +12,7 @@
   "malilib.config.debug.comment.keybindDebugging": "When enabled, key presses and held keys are\nprinted to the game console (and the action bar, if enabled)",
   "malilib.config.debug.comment.keybindDebuggingIngame": "If enabled, then the messages from 'keybindDebugging'\nare also printed to the in-game action bar",
   "malilib.config.debug.comment.mouseScrollDebug": "If enabled, some debug values from mouse scrolling\nare printed to the game console/log",
-  "malilib.config.debug.comment.printTranslationKeys": "Print all translation keys to the logger that are translated via the §eStringUtils.translate()§r method.\n\nThis is intended for finding out certain translation keys, if you for example want to add a translation override in-game for a given display string via the translation overrides system, without having to make a resource pack for it.\n\n§dDon't forget this on!§r It will likely spam your log quite fast...",
+  "malilib.config.debug.comment.printTranslationKeys": "Print all translation keys to the logger that\nare translated via the §eStringUtils.translate()§r method.\n\nThis is intended for finding out certain translation keys,\nif you for example want to add a translation override in-game for a given display string\nvia the translation overrides system, without having to make a resource pack for it.\n\n§dDon't forget this on!§r It will likely spam your log quite fast...",
   "malilib.config.debug.name.configElementDebug": "configElementDebug",
   "malilib.config.debug.name.debugMessages": "debugMessages",
   "malilib.config.debug.name.inputCancellationDebugging": "inputCancellationDebugging",

@@ -12,7 +12,7 @@
   "malilib.config.debug.comment.keybindDebugging": "활성화된 경우, 키 입력과 누르고 있는 키가\n게임 콘솔(활성화된 경우 액션바 포함)에 기록됩니다.",
   "malilib.config.debug.comment.keybindDebuggingIngame": "활성화된 경우, '키지정 디버깅'의 메시지가\n게임 내 액션바에도 표시됩니다.",
   "malilib.config.debug.comment.mouseScrollDebug": "활성화된 경우, 마우스 스크롤링의 일부 디버그 값이\n게임 콘솔/로그에 기록됩니다.",
-  "malilib.config.debug.comment.printTranslationKeys": "Print all translation keys to the logger that are translated via the §eStringUtils.translate()§r method.\n\nThis is intended for finding out certain translation keys, if you for example want to add a translation override in-game for a given display string via the translation overrides system, without having to make a resource pack for it.\n\n§dDon't forget this on!§r It will likely spam your log quite fast...",
+  "malilib.config.debug.comment.printTranslationKeys": "Print all translation keys to the logger that\nare translated via the §eStringUtils.translate()§r method.\n\nThis is intended for finding out certain translation keys,\nif you for example want to add a translation override in-game for a given display string\nvia the translation overrides system, without having to make a resource pack for it.\n\n§dDon't forget this on!§r It will likely spam your log quite fast...",
   "malilib.config.debug.name.configElementDebug": "설정 요소 디버그",
   "malilib.config.debug.name.debugMessages": "디버그 메시지",
   "malilib.config.debug.name.inputCancellationDebugging": "입력 취소 디버깅",
