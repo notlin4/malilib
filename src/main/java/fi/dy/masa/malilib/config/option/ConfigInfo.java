@@ -4,10 +4,16 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import fi.dy.masa.malilib.gui.config.ConfigTab;
 import fi.dy.masa.malilib.listener.EventListener;
 import fi.dy.masa.malilib.util.data.ConfigOnTab;
 
+/**
+ * Post-ReWrite code
+ */
+@ApiStatus.Experimental
 public interface ConfigInfo extends BaseInfo
 {
     /**

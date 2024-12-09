@@ -1,7 +1,13 @@
 package fi.dy.masa.malilib.gui.widget.button;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 
+/**
+ * Post-ReWrite code
+ */
+@ApiStatus.Experimental
 public interface ButtonActionListener
 {
     /**

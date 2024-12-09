@@ -214,5 +214,7 @@
   "malilib.message.set_layer_to": "레이어를 %s로 이동했습니다.",
   "malilib.message.toggled": "토글 %s %s",
   "malilib.message.value.off": "OFF",
-  "malilib.message.value.on": "ON"
+  "malilib.message.value.on": "ON",
+  "malilib.name.file_write_type.normal_write": "Normal Write",
+  "malilib.name.file_write_type.temp_and_rename": "Temp and Rename"
 }

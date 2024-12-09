@@ -214,5 +214,7 @@
   "malilib.message.set_layer_to": "將圖層設置為 %s",
   "malilib.message.toggled": "切換 %s %s",
   "malilib.message.value.off": "關閉",
-  "malilib.message.value.on": "開啟"
+  "malilib.message.value.on": "開啟",
+  "malilib.name.file_write_type.normal_write": "Normal Write",
+  "malilib.name.file_write_type.temp_and_rename": "Temp and Rename"
 }

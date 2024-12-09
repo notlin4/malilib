@@ -214,5 +214,7 @@
   "malilib.message.set_layer_to": "设置层至 %s",
   "malilib.message.toggled": "功能 %s %s",
   "malilib.message.value.off": "关闭",
-  "malilib.message.value.on": "开启"
+  "malilib.message.value.on": "开启",
+  "malilib.name.file_write_type.normal_write": "Normal Write",
+  "malilib.name.file_write_type.temp_and_rename": "Temp and Rename"
 }

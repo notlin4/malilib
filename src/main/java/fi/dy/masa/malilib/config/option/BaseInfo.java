@@ -2,8 +2,14 @@ package fi.dy.masa.malilib.config.option;
 
 import java.util.Optional;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import fi.dy.masa.malilib.util.data.ModInfo;
 
+/**
+ * Post-ReWrite code
+ */
+@ApiStatus.Experimental
 public interface BaseInfo
 {
     /**

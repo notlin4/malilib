@@ -1,5 +1,11 @@
 package fi.dy.masa.malilib.listener;
 
+import org.jetbrains.annotations.ApiStatus;
+
+/**
+ * Post-ReWrite code
+ */
+@ApiStatus.Experimental
 public interface EventListener
 {
     /**

@@ -214,5 +214,7 @@
   "malilib.message.set_layer_to": "Fijar la capa en %s",
   "malilib.message.toggled": "%s %s alternado",
   "malilib.message.value.off": "APAGADO",
-  "malilib.message.value.on": "ENCENDIDO"
+  "malilib.message.value.on": "ENCENDIDO",
+  "malilib.name.file_write_type.normal_write": "Normal Write",
+  "malilib.name.file_write_type.temp_and_rename": "Temp and Rename"
 }

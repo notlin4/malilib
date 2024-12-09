@@ -214,5 +214,7 @@
   "malilib.message.set_layer_to": "Set layer to %s",
   "malilib.message.toggled": "Toggled %s %s",
   "malilib.message.value.off": "OFF",
-  "malilib.message.value.on": "ON"
+  "malilib.message.value.on": "ON",
+  "malilib.name.file_write_type.normal_write": "Normal Write",
+  "malilib.name.file_write_type.temp_and_rename": "Temp and Rename"
 }

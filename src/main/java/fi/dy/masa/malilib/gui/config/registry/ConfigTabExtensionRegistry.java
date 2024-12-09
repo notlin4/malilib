@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import com.google.common.collect.ArrayListMultimap;
+import org.jetbrains.annotations.ApiStatus;
 
 import fi.dy.masa.malilib.config.option.ConfigInfo;
 import fi.dy.masa.malilib.gui.config.ConfigTab;
 
+/**
+ * Post-ReWrite code
+ */
+@ApiStatus.Experimental
 public class ConfigTabExtensionRegistry
 {
     protected final ArrayListMultimap<ConfigTab, Supplier<List<? extends ConfigInfo>>> configTabExtensions = ArrayListMultimap.create();

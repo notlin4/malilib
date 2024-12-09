@@ -3,8 +3,14 @@ package fi.dy.masa.malilib.config.value;
 import java.util.List;
 import javax.annotation.Nullable;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import fi.dy.masa.malilib.util.StringUtils;
 
+/**
+ * Post-ReWrite code
+ */
+@ApiStatus.Experimental
 public class BaseOptionListConfigValue implements OptionListConfigValue
 {
     protected final String name;

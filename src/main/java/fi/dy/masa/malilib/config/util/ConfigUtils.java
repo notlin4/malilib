@@ -4,10 +4,16 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import fi.dy.masa.malilib.MaLiLibConfigs;
 import fi.dy.masa.malilib.config.option.ConfigInfo;
 import fi.dy.masa.malilib.util.FileUtils;
 
+/**
+ * Post-ReWrite code
+ */
+@ApiStatus.Experimental
 public class ConfigUtils
 {
     public static Path getConfigDirectory()

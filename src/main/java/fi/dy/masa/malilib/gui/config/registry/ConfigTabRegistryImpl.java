@@ -4,10 +4,16 @@ import java.util.*;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import fi.dy.masa.malilib.gui.config.ConfigTab;
 import fi.dy.masa.malilib.gui.tab.ScreenTab;
 import fi.dy.masa.malilib.util.data.ModInfo;
 
+/**
+ * Post-ReWrite code
+ */
+@ApiStatus.Experimental
 public class ConfigTabRegistryImpl implements ConfigTabRegistry
 {
     protected final Map<ModInfo, List<Supplier<List<? extends ConfigTab>>>> configTabSuppliers = new HashMap<>();
