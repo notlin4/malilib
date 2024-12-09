@@ -9,7 +9,6 @@ public abstract class BaseScreen extends GuiBase
 {
     public BaseScreen() {}
 
-    @Override
     public void initGui()
     {
         super.initGui();

@@ -2,22 +2,17 @@ package fi.dy.masa.malilib.config.util;
 
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.List;
 
-import net.minecraft.util.ActionResult;
-
+import fi.dy.masa.malilib.MaLiLibConfigs;
 import fi.dy.masa.malilib.config.option.ConfigInfo;
-import fi.dy.masa.malilib.gui.config.ConfigTab;
-import fi.dy.masa.malilib.util.ListUtils;
-import fi.dy.masa.malilib.util.data.ConfigOnTab;
-import fi.dy.masa.malilib.util.data.ModInfo;
+import fi.dy.masa.malilib.util.FileUtils;
 
 public class ConfigUtils
 {
     public static Path getConfigDirectory()
     {
-        return FileUtils.getMinecraftDirectory().resolve("config");
+        return FileUtils.getMinecraftDirectoryPath().resolve("config");
     }
 
     /**
@@ -46,7 +41,7 @@ public class ConfigUtils
      */
     public static Path getActiveConfigDirectory()
     {
-        String profile = MaLiLibConfigs.Internal.ACTIVE_CONFIG_PROFILE.getValue();
+        String profile = MaLiLibConfigs.Experimental.ACTIVE_CONFIG_PROFILE.getValue();
         return getActiveConfigDirectory(profile);
     }
 
@@ -80,181 +75,5 @@ public class ConfigUtils
         configs.sort(Comparator.comparing((c) -> TextRendererUtils.stripVanillaFormattingCodes(c.getDisplayName())));
          */
         return configs;
-    }
-
-    /**
-     * Removes the given configs from the given list,
-     * and returns them as an expandable config group.
-     */
-    public static BaseConfigGroup extractOptionsToExpandableGroup(ArrayList<ConfigInfo> originalList,
-                                                                  ModInfo mod,
-                                                                  String groupName,
-                                                                  ConfigInfo... toExtract)
-    {
-        return extractOptionsToGroup(originalList, mod, groupName, ExpandableConfigGroup::new, toExtract);
-    }
-
-    /**
-     * Removes the given configs from the given list,
-     * and returns them as a config group using the provided factory.
-     */
-    public static BaseConfigGroup extractOptionsToGroup(ArrayList<ConfigInfo> originalList,
-                                                        ModInfo mod,
-                                                        String groupName,
-                                                        ConfigGroupFactory factory,
-                                                        ConfigInfo... toExtract)
-    {
-        List<ConfigInfo> extractedList = Arrays.asList(toExtract);
-
-        originalList.removeAll(extractedList);
-        ConfigUtils.sortConfigsInPlaceByDisplayName(extractedList);
-
-        return factory.create(mod, groupName, extractedList);
-    }
-
-    /**
-     * Removes the configs matching the given Predicate from the given list,
-     * and returns them as an expandable config group.
-     */
-    public static BaseConfigGroup extractOptionsToExpandableGroup(ArrayList<ConfigInfo> originalList,
-                                                                  ModInfo mod,
-                                                                  String groupName,
-                                                                  Predicate<ConfigInfo> extractTest)
-    {
-        return extractOptionsToGroup(originalList, mod, groupName, extractTest, ExpandableConfigGroup::new);
-    }
-
-    /**
-     * Removes the configs matching the given Predicate from the given list,
-     * and returns them as a config group using the provided factory.
-     */
-    public static BaseConfigGroup extractOptionsToGroup(ArrayList<ConfigInfo> originalList,
-                                                        ModInfo mod,
-                                                        String groupName,
-                                                        Predicate<ConfigInfo> extractTest,
-                                                        ConfigGroupFactory factory)
-    {
-        ArrayList<ConfigInfo> extractedList = new ArrayList<>();
-
-        ListUtils.extractEntriesToSecondList(originalList, extractedList, extractTest, true);
-        originalList.removeAll(extractedList);
-        ConfigUtils.sortConfigsInPlaceByDisplayName(extractedList);
-
-        return factory.create(mod, groupName, extractedList);
-    }
-
-    /**
-     * Creates a map of all the configs on the provided config tabs, using
-     * an identifier key that is in the form "modId.tabName.configName".
-     */
-    public static Map<String, ConfigOnTab> getConfigIdToConfigMapFromTabs(List<? extends ConfigTab> tabs)
-    {
-        Map<String, ConfigOnTab> map = new HashMap<>();
-
-        for (ConfigTab tab : tabs)
-        {
-            String modCategory = tab.getModInfo().getModId() + "." + tab.getName() + ".";
-
-            for (ConfigOnTab config : tab.getTabbedExpandedConfigs())
-            {
-                String id = modCategory + config.getConfig().getName();
-                map.put(id, config);
-            }
-        }
-
-        return map;
-    }
-
-    public static void resetAllKeybindSettingsToDefaults(List<? extends Hotkey> hotkeys)
-    {
-        hotkeys.forEach(h -> h.getKeyBind().resetSettingsToDefaults());
-    }
-
-    /**
-     * Loads all configs and other systems from file.<br>
-     * <b>Note:</b> You are not supposed to call this from mod code!<br>
-     * This is a wrapper for loading all the different systems at once.
-     */
-    public static void loadAllConfigsFromFile()
-    {
-        Registry.ICON.loadFromFile();
-        ((ConfigManagerImpl) Registry.CONFIG_MANAGER).loadAllConfigs();
-        Registry.ACTION_REGISTRY.loadFromFile();
-        CustomHotkeyManager.INSTANCE.loadFromFile();
-        Registry.INFO_WIDGET_MANAGER.loadFromFile();
-        Registry.MESSAGE_REDIRECT_MANAGER.loadFromFile();
-        Registry.TRANSLATION_OVERRIDE_MANAGER.loadFromFile();
-        Registry.HOTKEY_MANAGER.updateUsedKeys();
-    }
-
-    /**
-     * Saves all configs and other systems to file.<br>
-     * <b>Note:</b> You are not supposed to call this from mod code!<br>
-     * This is a wrapper for saving all the different systems at once.
-     */
-    public static void saveAllConfigsToFileIfDirty()
-    {
-        ((ConfigManagerImpl) Registry.CONFIG_MANAGER).saveIfDirty();
-        Registry.INFO_WIDGET_MANAGER.saveToFileIfDirty();
-        Registry.MESSAGE_REDIRECT_MANAGER.saveToFileIfDirty();
-        Registry.TRANSLATION_OVERRIDE_MANAGER.saveToFileIfDirty();
-        OverlayRendererContainer.INSTANCE.saveToFile(false);
-        ActionExecutionWidgetManager.INSTANCE.clear();
-
-        // These should always already be saved when closing the corresponding config screens
-        Registry.ICON.saveToFileIfDirty();
-        Registry.ACTION_REGISTRY.saveToFileIfDirty();
-        CustomHotkeyManager.INSTANCE.saveToFileIfDirty();
-    }
-
-    private static void copyConfigsIfProfileNotExist(String profile)
-    {
-        if (org.apache.commons.lang3.StringUtils.isBlank(profile) == false)
-        {
-            Path dir = getActiveConfigDirectory();
-
-            if (FileUtils.createDirectoriesIfMissing(dir))
-            {
-                Registry.ICON.saveToFile();
-                ((ConfigManagerImpl) Registry.CONFIG_MANAGER).saveAllConfigs();
-                Registry.ACTION_REGISTRY.saveToFile();
-                CustomHotkeyManager.INSTANCE.saveToFile();
-                Registry.INFO_WIDGET_MANAGER.saveToFile();
-                Registry.MESSAGE_REDIRECT_MANAGER.saveToFile();
-                Registry.TRANSLATION_OVERRIDE_MANAGER.saveToFile();
-                ActionExecutionWidgetManager.INSTANCE.saveAllLoadedToFile();
-            }
-        }
-    }
-
-    public static ActionResult switchConfigProfile(ActionContext ctx, String profile)
-    {
-        String current = MaLiLibConfigs.Internal.ACTIVE_CONFIG_PROFILE.getValue();
-
-        if ("default".equals(profile))
-        {
-            profile = "";
-        }
-
-        if (current.equals(profile) == false)
-        {
-            saveAllConfigsToFileIfDirty();
-            MaLiLibConfigs.Internal.ACTIVE_CONFIG_PROFILE.setValue(profile);
-            copyConfigsIfProfileNotExist(profile);
-            loadAllConfigsFromFile();
-
-            MessageDispatcher.success("malilib.message.info.switched_config_profile", profile);
-
-            return ActionResult.SUCCESS;
-        }
-
-        return ActionResult.PASS;
-    }
-
-    public static ActionResult loadAllConfigsFromFileAction(ActionContext ctx)
-    {
-        loadAllConfigsFromFile();
-        MessageDispatcher.success("malilib.message.info.loaded_all_configs_from_file");
-        return ActionResult.SUCCESS;
     }
 }

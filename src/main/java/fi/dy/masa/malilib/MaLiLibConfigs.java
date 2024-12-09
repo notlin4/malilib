@@ -105,15 +105,24 @@ public class MaLiLibConfigs implements IConfigHandler
         );
     }
 
+    // Stuff used by any Post-Rewrite Code
     private static final String EXPERIMENTAL_KEY = MaLiLibReference.MOD_ID+".config.experimental";
     public static class Experimental
     {
+        // Generic
         public static final ConfigBoolean           SORT_CONFIGS_BY_NAME            = new ConfigBoolean("sortConfigsByName", false).apply(EXPERIMENTAL_KEY);
         public static final ConfigBoolean           SORT_EXTENSION_MOD_OPTIONS      = new ConfigBoolean("sortExtensionModOptions", false).apply(EXPERIMENTAL_KEY);
 
+        // Internal
+        public static final ConfigString            ACTIVE_CONFIG_PROFILE           = new ConfigString("activeConfigProfile", "").apply(EXPERIMENTAL_KEY);
+
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                // Generic
                 SORT_CONFIGS_BY_NAME,
-                SORT_EXTENSION_MOD_OPTIONS
+                SORT_EXTENSION_MOD_OPTIONS,
+
+                // Internal
+                ACTIVE_CONFIG_PROFILE
         );
     }
 
