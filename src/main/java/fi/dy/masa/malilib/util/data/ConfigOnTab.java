@@ -1,9 +1,15 @@
 package fi.dy.masa.malilib.util.data;
 
 
+import org.jetbrains.annotations.ApiStatus;
+
 import fi.dy.masa.malilib.config.option.ConfigInfo;
 import fi.dy.masa.malilib.gui.config.ConfigTab;
 
+/**
+ * Post-ReWrite code
+ */
+@ApiStatus.Experimental
 public class ConfigOnTab
 {
     protected final ConfigTab tab;

@@ -18,6 +18,9 @@ import fi.dy.masa.malilib.MaLiLib;
 import fi.dy.masa.malilib.config.value.FileWriteType;
 import fi.dy.masa.malilib.util.game.wrap.GameWrap;
 
+/**
+ * File has been merged with Post-Rewrite FileUtils
+ */
 public class FileUtils
 {
     public static final Predicate<Path> DIRECTORY_FILTER = FileUtils::isRegularDirectory;

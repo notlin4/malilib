@@ -41,7 +41,7 @@ public class ConfigUtils
      */
     public static Path getActiveConfigDirectory()
     {
-        String profile = MaLiLibConfigs.Experimental.ACTIVE_CONFIG_PROFILE.getValue();
+        String profile = MaLiLibConfigs.Experimental.ACTIVE_CONFIG_PROFILE.getStringValue();
         return getActiveConfigDirectory(profile);
     }
 

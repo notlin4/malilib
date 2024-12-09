@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import com.llamalad7.mixinextras.lib.apache.commons.tuple.Pair;
 
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
-import org.apache.http.annotation.Experimental;
+import org.jetbrains.annotations.ApiStatus;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -49,7 +49,7 @@ public class BlockUtils
      * type block state property in the given state, if any.
      * If there are no PropertyDirection properties, then empty() is returned.
      */
-    @Experimental
+    @ApiStatus.Experimental
     public static Optional<Direction> PRW_getFirstPropertyFacingValue(BlockState state)
     {
         Optional<EnumProperty<Direction>> propOptional = PRW_getFirstDirectionProperty(state);
@@ -61,7 +61,7 @@ public class BlockUtils
      * @return the first PropertyDirection, or empty() if there are no such properties
      */
     @SuppressWarnings("unchecked")
-    @Experimental
+    @ApiStatus.Experimental
     public static Optional<EnumProperty<Direction>> PRW_getFirstDirectionProperty(BlockState state)
     {
         for (Property<?> prop : state.getProperties())
@@ -75,7 +75,7 @@ public class BlockUtils
         return Optional.empty();
     }
 
-    @Experimental
+    @ApiStatus.Experimental
     public static boolean PRW_isFluidBlock(BlockState state)
     {
         if (state.getFluidState().equals(Fluids.EMPTY.getDefaultState()))
@@ -86,7 +86,7 @@ public class BlockUtils
         return true;
     }
 
-    @Experimental
+    @ApiStatus.Experimental
     public static boolean PRW_isFluidSourceBlock(BlockState state)
     {
         return state.getBlock() instanceof FluidBlock && state.getFluidState().getLevel() == 8;

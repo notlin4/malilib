@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import fi.dy.masa.malilib.gui.config.ConfigTab;
 import fi.dy.masa.malilib.listener.EventListener;
+import fi.dy.masa.malilib.util.data.ConfigOnTab;
 
 public interface ConfigInfo extends BaseInfo
 {
