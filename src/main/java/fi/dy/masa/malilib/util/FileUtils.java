@@ -4,27 +4,38 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Predicate;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtSizeTracker;
 import fi.dy.masa.malilib.MaLiLib;
+import fi.dy.masa.malilib.util.game.wrap.GameWrap;
 
 public class FileUtils
 {
+    public static final Predicate<Path> DIRECTORY_FILTER = FileUtils::isRegularDirectory;
+    public static final Predicate<Path> ALWAYS_FALSE_FILEFILTER = p -> false;
+    public static final Predicate<Path> ANY_FILE_FILEFILTER = Files::isRegularFile;
+    public static final Predicate<Path> JSON_FILEFILTER = (f) -> Files.isRegularFile(f) && f.getFileName().toString().endsWith(".json");
+
     private static final Set<Character> ILLEGAL_CHARACTERS = ImmutableSet.of( '/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':' );
 
     public static File getConfigDirectory()
     {
+        //return new File(MinecraftClient.getInstance().runDirectory, "config");
         return new File(MinecraftClient.getInstance().runDirectory, "config");
     }
 
-    public static File getMinecraftDirectory()
+    public static Path getMinecraftDirectory()
     {
-        return MinecraftClient.getInstance().runDirectory;
+        //return MinecraftClient.getInstance().runDirectory;
+        return GameWrap.getClient().runDirectory.toPath();
     }
 
     /**

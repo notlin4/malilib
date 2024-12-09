@@ -108,7 +108,12 @@ public class MaLiLibConfigs implements IConfigHandler
     private static final String EXPERIMENTAL_KEY = MaLiLibReference.MOD_ID+".config.experimental";
     public static class Experimental
     {
+        public static final ConfigBoolean           SORT_CONFIGS_BY_NAME            = new ConfigBoolean("sortConfigsByName", false).apply(EXPERIMENTAL_KEY);
+        public static final ConfigBoolean           SORT_EXTENSION_MOD_OPTIONS      = new ConfigBoolean("sortExtensionModOptions", false).apply(EXPERIMENTAL_KEY);
+
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                SORT_CONFIGS_BY_NAME,
+                SORT_EXTENSION_MOD_OPTIONS
         );
     }
 
