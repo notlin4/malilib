@@ -1,10 +1,9 @@
-package fi.dy.masa.malilib.util;
+package fi.dy.masa.malilib.util.nbt;
 
 /**
- * Moved to util/nbt
+ * NBT Tag Constants Collection.
  */
-@Deprecated(forRemoval = true)
-public class NbtKeys extends fi.dy.masa.malilib.util.nbt.NbtKeys
+public class NbtKeys
 {
     // Generic
     public static final String ID                  = "id";
@@ -41,6 +40,10 @@ public class NbtKeys extends fi.dy.masa.malilib.util.nbt.NbtKeys
     public static final String NOTE                = "note_block_sound";
     public static final String PROFILE             = "profile";
     public static final String RECIPES_USED        = "RecipesUsed";
+    public static final String COOK_TIME_SPENT     = "cooking_time_spent";
+    public static final String COOK_TIME_TOTAL     = "cooking_total_time";
+    public static final String BURN_TIME           = "lit_time_remaining";
+    public static final String BURN_TIME_TOTAL     = "lit_total_time";
 
     // Entity
     public static final String ATTRIB              = "attributes";
@@ -85,6 +88,7 @@ public class NbtKeys extends fi.dy.masa.malilib.util.nbt.NbtKeys
     public static final String DISPLAYED           = "toBeDisplayed";
 
     // Other/Outdated Tags (There are tons more not listed)
+    // 24w09a (Data Components)
     public static final String OLD_TAGS            = "tags";
     public static final String OLD_COUNT           = "Count";
     public static final String OLD_DISPLAY         = "display";
@@ -102,6 +106,11 @@ public class NbtKeys extends fi.dy.masa.malilib.util.nbt.NbtKeys
     public static final String OLD_MAP_COLOR       = "MapColor";
     public static final String OLD_NAME            = "Name";
     public static final String OLD_LORE            = "Lore";
+    // 24w18a? (Attributes / Enchantments)
     public static final String OLD_ATTRIBUTES      = "AttributeModifiers";
     public static final String OLD_ENCHANTMENTS    = "Enchantments";
+    // 1.21.4-pre2 (AbstractFurnaces)
+    public static final String OLD_COOK_TIME_SPENT = "CookTime";
+    public static final String OLD_COOK_TIME_TOTAL = "CookTimeTotal";
+    public static final String OLD_BURN_TIME       = "BurnTime";
 }
