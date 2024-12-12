@@ -356,7 +356,7 @@ public class RenderUtils
 
         if (textLines.isEmpty() == false && GuiUtils.getCurrentScreen() != null)
         {
-            //RenderSystem.enableDepthTest();
+            RenderSystem.enableDepthTest();
             TextRenderer font = mc.textRenderer;
             int maxLineLength = 0;
             int maxWidth = GuiUtils.getCurrentScreen().width;
@@ -390,6 +390,8 @@ public class RenderUtils
             {
                 textStartX = Math.max(2, maxWidth - maxLineLength - 8);
             }
+
+            //drawTexturedRect(GuiBase.BG_TEXTURE, x, y, 0, 0, maxLineLength, maxWidth, drawContext);
 
             drawContext.getMatrices().push();
             drawContext.getMatrices().translate(0, 0, 300);
