@@ -6,8 +6,6 @@ import java.util.function.Supplier;
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.block.Block;
-import net.minecraft.block.CrafterBlock;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.CrafterBlockEntity;
@@ -28,41 +26,42 @@ import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
-import net.minecraft.world.World;
+import net.minecraft.util.profiler.Profilers;
 
 import fi.dy.masa.malilib.MaLiLib;
 import fi.dy.masa.malilib.MaLiLibConfigs;
 import fi.dy.masa.malilib.MaLiLibReference;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.interfaces.IRenderer;
-import fi.dy.masa.malilib.mixin.IMixinAbstractHorseEntity;
 import fi.dy.masa.malilib.render.InventoryOverlay;
 import fi.dy.masa.malilib.render.RenderUtils;
-import fi.dy.masa.malilib.util.*;
+import fi.dy.masa.malilib.util.Color4f;
+import fi.dy.masa.malilib.util.GuiUtils;
+import fi.dy.masa.malilib.util.InventoryUtils;
+import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.malilib.util.game.BlockUtils;
+import fi.dy.masa.malilib.util.nbt.NbtBlockUtils;
 
 public class TestRenderHandler implements IRenderer
 {
-    private boolean wasHeld = false;
-
     @Override
     public void onRenderGameOverlayLastDrawer(DrawContext drawContext, float partialTicks, Profiler profiler, MinecraftClient mc)
     {
         if (MaLiLibConfigs.Test.TEST_CONFIG_BOOLEAN.getBooleanValue() && GuiBase.isAltDown())
         {
-            profiler.push(this.getProfilerSectionSupplier() + "_render_overlay");
+            profiler.push(MaLiLibReference.MOD_ID + "_inventory_overlay");
+
             //renderInventoryOverlay(mc, drawContext);
             InventoryOverlay.Context context = RayTraceUtils.getTargetInventory(mc);
 
             if (context != null)
             {
-                renderInventoryOverlay(context, drawContext);
+                renderInventoryOverlay(context, drawContext, mc);
             }
+
             profiler.pop();
         }
     }
@@ -74,7 +73,7 @@ public class TestRenderHandler implements IRenderer
 
         if (mc.player != null)
         {
-            profiler.push(this.getProfilerSectionSupplier() + "_render_targeting_overlay");
+            profiler.push(MaLiLibReference.MOD_ID + "_targeting_overlay");
             this.renderTargetingOverlay(posMatrix, mc);
             profiler.pop();
         }
@@ -87,24 +86,18 @@ public class TestRenderHandler implements IRenderer
         {
             MinecraftClient mc = MinecraftClient.getInstance();
 
-            profiler.push(this.getProfilerSectionSupplier() + "_test_walls");
-            if (wasHeld && !GuiBase.isShiftDown())
-            {
-                TestWalls.clear();
-                wasHeld = false;
-            }
-            else if (GuiBase.isShiftDown())
+            profiler.push(MaLiLibReference.MOD_ID + "_test_walls");
+
+            if (TestEnumConfig.TEST_WALLS_HOTKEY.getBooleanValue())
             {
                 if (TestWalls.needsUpdate(camera.getBlockPos()))
                 {
-                    profiler.swap(this.getProfilerSectionSupplier() + "_test_walls_update");
                     TestWalls.update(camera, mc);
                 }
 
-                profiler.swap(this.getProfilerSectionSupplier() + "_test_walls_draw");
                 TestWalls.draw(camera.getPos(), posMatrix, projMatrix, mc, profiler);
-                wasHeld = true;
             }
+
             profiler.pop();
         }
     }
@@ -113,26 +106,33 @@ public class TestRenderHandler implements IRenderer
     public void onRenderTooltipLast(DrawContext drawContext, ItemStack stack, int x, int y)
     {
         Item item = stack.getItem();
+        Profiler profiler = Profilers.get();
 
         if (item instanceof FilledMapItem)
         {
             if (MaLiLibConfigs.Test.TEST_CONFIG_BOOLEAN.getBooleanValue() && GuiBase.isShiftDown())
             {
+                profiler.push(MaLiLibReference.MOD_ID + "_map_preview");
                 RenderUtils.renderMapPreview(stack, x, y, 160, false, drawContext);
+                profiler.pop();
             }
         }
         else if (stack.getComponents().contains(DataComponentTypes.CONTAINER) && InventoryUtils.shulkerBoxHasItems(stack))
         {
             if (MaLiLibConfigs.Test.TEST_CONFIG_BOOLEAN.getBooleanValue() && GuiBase.isShiftDown())
             {
+                profiler.push(MaLiLibReference.MOD_ID + "_shulker_preview");
                 RenderUtils.renderShulkerBoxPreview(stack, x, y, true, drawContext);
+                profiler.pop();
             }
         }
         else if (stack.getComponents().contains(DataComponentTypes.BUNDLE_CONTENTS) && InventoryUtils.bundleHasItems(stack))
         {
             if (MaLiLibConfigs.Test.TEST_CONFIG_BOOLEAN.getBooleanValue() && GuiBase.isShiftDown())
             {
+                profiler.push(MaLiLibReference.MOD_ID + "_bundle_preview");
                 RenderUtils.renderBundlePreview(stack, x, y, true, drawContext);
+                profiler.pop();
             }
         }
     }
@@ -140,7 +140,7 @@ public class TestRenderHandler implements IRenderer
     @Override
     public Supplier<String> getProfilerSectionSupplier()
     {
-        return () -> MaLiLibReference.MOD_ID + "_test_render";
+        return () -> MaLiLibReference.MOD_ID + "_test";
     }
 
     private void renderTargetingOverlay(Matrix4f posMatrix, MinecraftClient mc)
@@ -362,9 +362,9 @@ public class TestRenderHandler implements IRenderer
             InventoryOverlay.renderEquipmentStacks(entityLivingBase, x, y, mc, drawContext);
         }
         */
-    public static void renderInventoryOverlay(InventoryOverlay.Context context, DrawContext drawContext)
+    public static void renderInventoryOverlay(InventoryOverlay.Context context, DrawContext drawContext, MinecraftClient mc)
     {
-        MinecraftClient mc = MinecraftClient.getInstance();
+        //MinecraftClient mc = MinecraftClient.getInstance();
         LivingEntity entityLivingBase = null;
         BlockEntity be = null;
         Inventory inv = null;
@@ -397,6 +397,9 @@ public class TestRenderHandler implements IRenderer
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
         int x = xCenter - 52 / 2;
         int y = yCenter - 92;
+
+        MaLiLib.LOGGER.error("0: -> inv.type [{}] // nbt.type [{}]", context.inv() != null ? InventoryOverlay.getInventoryType(context.inv()) : null, context.nbt() != null ? InventoryOverlay.getInventoryType(context.nbt()) : null);
+        MaLiLib.LOGGER.error("1: -> inv.size [{}] // inv.isEmpty [{}]", context.inv() != null ? context.inv().size() : -1, context.inv() != null ? context.inv().isEmpty() : -1);
 
         if (inv != null && inv.size() > 0)
         {
@@ -432,16 +435,16 @@ public class TestRenderHandler implements IRenderer
                 }
                 else if (context.nbt() != null)
                 {
-                    lockedSlots = BlockUtils.getDisabledSlotsFromNbt(context.nbt());
+                    lockedSlots = NbtBlockUtils.getDisabledSlotsFromNbt(context.nbt());
                 }
             }
-
-            //MaLiLib.logger.warn("renderInventoryOverlay: type [{}] // Nbt Type [{}]", type.toString(), context.nbt() != null ? InventoryOverlay.getInventoryType(context.nbt()) : "INVALID");
 
             if (context.be() != null && context.be().getCachedState().getBlock() instanceof ShulkerBoxBlock sbb)
             {
                 RenderUtils.setShulkerboxBackgroundTintColor(sbb, true);
             }
+
+            MaLiLib.LOGGER.warn("render():0: type [{}] // Nbt Type [{}]", type.toString(), context.nbt() != null ? InventoryOverlay.getInventoryType(context.nbt()) : "INVALID");
 
             if (isHorse)
             {
@@ -466,10 +469,13 @@ public class TestRenderHandler implements IRenderer
             if (totalSlots > 0)
             {
                 InventoryOverlay.renderInventoryBackground(type, xInv, yInv, props.slotsPerRow, totalSlots, mc);
+                // TODO 1.21.4+
+                /*
                 if (type == InventoryOverlay.InventoryRenderType.BREWING_STAND)
                 {
                     InventoryOverlay.renderBrewerBackgroundSlots(inv, xInv, yInv, drawContext);
                 }
+                 */
                 InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, props.slotsPerRow, firstSlot, totalSlots, lockedSlots, mc, drawContext);
             }
         }

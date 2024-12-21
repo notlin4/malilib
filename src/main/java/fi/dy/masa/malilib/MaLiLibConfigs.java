@@ -16,9 +16,9 @@ import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.test.ConfigTestLockedList;
 import fi.dy.masa.malilib.test.ConfigTestOptList;
 import fi.dy.masa.malilib.test.TestEnumConfig;
-import fi.dy.masa.malilib.util.Color4f;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
+import fi.dy.masa.malilib.util.Color4f;
 
 public class MaLiLibConfigs implements IConfigHandler
 {
@@ -27,20 +27,24 @@ public class MaLiLibConfigs implements IConfigHandler
     private static final String GENERIC_KEY = MaLiLibReference.MOD_ID+".config.generic";
     public static class Generic
     {
-        public static final ConfigHotkey      IGNORED_KEYS              = new ConfigHotkey("ignoredKeys", "").apply(GENERIC_KEY);
-        public static final ConfigHotkey      OPEN_GUI_CONFIGS          = new ConfigHotkey("openGuiConfigs", "A,C").apply(GENERIC_KEY);
-        public static final ConfigBoolean     REALMS_COMMON_CONFIG      = new ConfigBoolean("realmsCommonConfig", true).apply(GENERIC_KEY);
-        public static final ConfigBoolean     ENABLE_ACTIONBAR_MESSAGES = new ConfigBoolean("enableActionbarMessages", true).apply(GENERIC_KEY);
+        public static final ConfigHotkey            IGNORED_KEYS              = new ConfigHotkey            ("ignoredKeys",      "").apply(GENERIC_KEY);
+        public static final ConfigHotkey            OPEN_GUI_CONFIGS          = new ConfigHotkey            ("openGuiConfigs",   "A,C").apply(GENERIC_KEY);
+        public static final ConfigBooleanHotkeyed   ENABLE_CONFIG_SWITCHER    = new ConfigBooleanHotkeyed   ("enableConfigSwitcher",    true, "").apply(GENERIC_KEY);
+        public static final ConfigBoolean           REALMS_COMMON_CONFIG      = new ConfigBoolean           ("realmsCommonConfig",      true).apply(GENERIC_KEY);
+        public static final ConfigBooleanHotkeyed   ENABLE_ACTIONBAR_MESSAGES = new ConfigBooleanHotkeyed   ("enableActionbarMessages", true, "").apply(GENERIC_KEY);
 
         public static final ImmutableList<IConfigValue> OPTIONS = ImmutableList.of(
                 IGNORED_KEYS,
                 OPEN_GUI_CONFIGS,
+                ENABLE_CONFIG_SWITCHER,
                 REALMS_COMMON_CONFIG,
                 ENABLE_ACTIONBAR_MESSAGES
         );
 
         // Can't add OPEN_GUI_CONFIGS here, because things will break
         public static final List<IHotkey> HOTKEY_LIST = ImmutableList.of(
+                ENABLE_CONFIG_SWITCHER,
+                ENABLE_ACTIONBAR_MESSAGES
         );
     }
 
@@ -53,6 +57,7 @@ public class MaLiLibConfigs implements IConfigHandler
         public static final ConfigBoolean KEYBIND_DEBUG             = new ConfigBoolean("keybindDebugging", false).apply(DEBUG_KEY);
         public static final ConfigBoolean KEYBIND_DEBUG_ACTIONBAR   = new ConfigBoolean("keybindDebuggingIngame", false).apply(DEBUG_KEY);
         public static final ConfigBoolean MOUSE_SCROLL_DEBUG        = new ConfigBoolean("mouseScrollDebug", false).apply(DEBUG_KEY);
+        public static final ConfigBoolean PRINT_TRANSLATION_KEYS    = new ConfigBoolean("printTranslationKeys", false).apply(DEBUG_KEY);
 
         public static final ImmutableList<IConfigValue> OPTIONS = ImmutableList.of(
                 DEBUG_MESSAGES,
@@ -60,7 +65,8 @@ public class MaLiLibConfigs implements IConfigHandler
                 INPUT_CANCELLATION_DEBUG,
                 KEYBIND_DEBUG,
                 KEYBIND_DEBUG_ACTIONBAR,
-                MOUSE_SCROLL_DEBUG
+                MOUSE_SCROLL_DEBUG,
+                PRINT_TRANSLATION_KEYS
         );
 
         public static final List<IHotkey> HOTKEY_LIST = ImmutableList.of(
@@ -103,6 +109,26 @@ public class MaLiLibConfigs implements IConfigHandler
         );
     }
 
+    // Stuff used by any Post-Rewrite Code
+    private static final String EXPERIMENTAL_KEY = MaLiLibReference.MOD_ID+".config.experimental";
+    public static class Experimental
+    {
+        // Generic
+        public static final ConfigBoolean           SORT_CONFIGS_BY_NAME            = new ConfigBoolean("sortConfigsByName", false).apply(EXPERIMENTAL_KEY);
+        public static final ConfigBoolean           SORT_EXTENSION_MOD_OPTIONS      = new ConfigBoolean("sortExtensionModOptions", false).apply(EXPERIMENTAL_KEY);
+
+        // Internal
+        public static final ConfigString            ACTIVE_CONFIG_PROFILE           = new ConfigString("activeConfigProfile", "").apply(EXPERIMENTAL_KEY);
+
+        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                // Generic
+                SORT_CONFIGS_BY_NAME,
+                SORT_EXTENSION_MOD_OPTIONS,
+
+                // Internal
+                ACTIVE_CONFIG_PROFILE
+        );
+    }
 
     public static void loadFromFile()
     {
@@ -124,6 +150,11 @@ public class MaLiLibConfigs implements IConfigHandler
                     ConfigUtils.readConfigBase(root, "Test", Test.OPTIONS);
                     ConfigUtils.readHotkeyToggleOptions(root, "TestEnumHotkeys", "TestEnumToggles", TestEnumConfig.VALUES);
                 }
+
+                if (MaLiLibReference.EXPERIMENTAL_MODE)
+                {
+                    ConfigUtils.readConfigBase(root, "Experimental", Experimental.OPTIONS);
+                }
             }
         }
     }
@@ -143,6 +174,11 @@ public class MaLiLibConfigs implements IConfigHandler
             {
                 ConfigUtils.writeConfigBase(root, "Test", Test.OPTIONS);
                 ConfigUtils.writeHotkeyToggleOptions(root, "TestEnumHotkeys", "TestEnumToggles", TestEnumConfig.VALUES);
+            }
+
+            if (MaLiLibReference.EXPERIMENTAL_MODE)
+            {
+                ConfigUtils.writeConfigBase(root, "Experimental", Experimental.OPTIONS);
             }
 
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));

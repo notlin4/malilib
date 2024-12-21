@@ -8,15 +8,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import fi.dy.masa.malilib.MaLiLib;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -46,11 +45,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import fi.dy.masa.malilib.MaLiLibReference;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.mixin.IMixinAbstractHorseEntity;
-import fi.dy.masa.malilib.mixin.IMixinDrawContext;
 import fi.dy.masa.malilib.mixin.IMixinPiglinEntity;
 import fi.dy.masa.malilib.util.*;
+import fi.dy.masa.malilib.util.game.wrap.GameWrap;
+import fi.dy.masa.malilib.util.nbt.NbtBlockUtils;
+import fi.dy.masa.malilib.util.nbt.NbtEntityUtils;
+import fi.dy.masa.malilib.util.nbt.NbtKeys;
 
 public class InventoryOverlay
 {
@@ -67,21 +70,40 @@ public class InventoryOverlay
     public static final Identifier TEXTURE_LOCKED_SLOT      = Identifier.ofVanilla("container/crafter/disabled_slot");
 
     // Additional Empty Slot Textures
-    public static final Identifier TEXTURE_EMPTY_HORSE_ARMOR = Identifier.ofVanilla("container/slot/horse_armor");
-    public static final Identifier TEXTURE_EMPTY_LLAMA_ARMOR = Identifier.ofVanilla("container/slot/llama_armor");
-    public static final Identifier TEXTURE_EMPTY_SADDLE      = Identifier.ofVanilla("container/slot/saddle");
+    public static final Identifier TEXTURE_EMPTY_HORSE_ARMOR = Identifier.ofVanilla("container/horse/armor_slot");
+    public static final Identifier TEXTURE_EMPTY_LLAMA_ARMOR = Identifier.ofVanilla("container/horse/llama_armor_slot");
+    public static final Identifier TEXTURE_EMPTY_SADDLE      = Identifier.ofVanilla("container/horse/saddle_slot");
+    // Brewer Slots (1.21.4+)
     public static final Identifier TEXTURE_EMPTY_BREWER_FUEL = Identifier.ofVanilla("container/slot/brewing_fuel");
     public static final Identifier TEXTURE_EMPTY_POTION      = Identifier.ofVanilla("container/slot/potion");
+    // Other Misc Empty Slots (1.21.3-)
+    public static final Identifier TEXTURE_EMPTY_SLOT_AMETHYST   = Identifier.ofVanilla("item/empty_slot_amethyst_shard");
+    public static final Identifier TEXTURE_EMPTY_SLOT_AXE        = Identifier.ofVanilla("item/empty_slot_axe");
+    public static final Identifier TEXTURE_EMPTY_SLOT_DIAMOND    = Identifier.ofVanilla("item/empty_slot_diamond");
+    public static final Identifier TEXTURE_EMPTY_SLOT_EMERALD    = Identifier.ofVanilla("item/empty_slot_emerald");
+    public static final Identifier TEXTURE_EMPTY_SLOT_HOE        = Identifier.ofVanilla("item/empty_slot_hoe");
+    public static final Identifier TEXTURE_EMPTY_SLOT_INGOT      = Identifier.ofVanilla("item/empty_slot_ingot");
+    public static final Identifier TEXTURE_EMPTY_SLOT_LAPIS      = Identifier.ofVanilla("item/empty_slot_lapis_lazuli");
+    public static final Identifier TEXTURE_EMPTY_SLOT_PICKAXE    = Identifier.ofVanilla("item/empty_slot_pickaxe");
+    public static final Identifier TEXTURE_EMPTY_SLOT_QUARTZ     = Identifier.ofVanilla("item/empty_slot_quartz");
+    public static final Identifier TEXTURE_EMPTY_SLOT_REDSTONE   = Identifier.ofVanilla("item/empty_slot_redstone_dust");
+    public static final Identifier TEXTURE_EMPTY_SLOT_SHOVEL     = Identifier.ofVanilla("item/empty_slot_shovel");
+    public static final Identifier TEXTURE_EMPTY_SLOT_ARMOR_TRIM = Identifier.ofVanilla("item/empty_slot_smithing_template_armor_trim");
+    public static final Identifier TEXTURE_EMPTY_SLOT_UPGRADE    = Identifier.ofVanilla("item/empty_slot_smithing_template_netherite_upgrade");
+    public static final Identifier TEXTURE_EMPTY_SLOT_SWORD      = Identifier.ofVanilla("item/empty_slot_sword");
+
 
     private static final EquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EquipmentSlot[] { EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
     public static final InventoryProperties INV_PROPS_TEMP = new InventoryProperties();
 
     private static final Identifier[] EMPTY_SLOT_TEXTURES = new Identifier[]
     {
+        // 1.21.3-
         Identifier.ofVanilla("item/empty_armor_slot_boots"),
         Identifier.ofVanilla("item/empty_armor_slot_leggings"),
         Identifier.ofVanilla("item/empty_armor_slot_chestplate"),
         Identifier.ofVanilla("item/empty_armor_slot_helmet")
+        // 1.21.4+
 /*
         Identifier.ofVanilla("container/slot/boots"),
         Identifier.ofVanilla("container/slot/leggings"),
@@ -449,7 +471,7 @@ public class InventoryOverlay
         {
             Block block = ((BlockItem) item).getBlock();
 
-            if (block instanceof ShulkerBoxBlock || block instanceof ChestBlock)
+            if (block instanceof ShulkerBoxBlock || block instanceof ChestBlock || block instanceof BarrelBlock)
             {
                 return InventoryRenderType.FIXED_27;
             }
@@ -501,11 +523,12 @@ public class InventoryOverlay
      */
     public static InventoryRenderType getInventoryType(@Nonnull NbtCompound nbt)
     {
-        BlockEntityType<?> blockType = BlockUtils.getBlockEntityTypeFromNbt(nbt);
+        BlockEntityType<?> blockType = NbtBlockUtils.getBlockEntityTypeFromNbt(nbt);
 
         if (blockType != null)
         {
             if (blockType.equals(BlockEntityType.SHULKER_BOX) ||
+                blockType.equals(BlockEntityType.BARREL) ||
                 blockType.equals(BlockEntityType.CHEST) ||
                 blockType.equals(BlockEntityType.TRAPPED_CHEST))
             {
@@ -560,7 +583,7 @@ public class InventoryOverlay
             }
         }
 
-        EntityType<?> entityType = EntityUtils.getEntityTypeFromNbt(nbt);
+        EntityType<?> entityType = NbtEntityUtils.getEntityTypeFromNbt(nbt);
 
         if (entityType != null)
         {
@@ -573,6 +596,7 @@ public class InventoryOverlay
                 entityType.equals(EntityType.JUNGLE_CHEST_BOAT) ||
                 entityType.equals(EntityType.MANGROVE_CHEST_BOAT) ||
                 entityType.equals(EntityType.OAK_CHEST_BOAT) ||
+                entityType.equals(EntityType.PALE_OAK_CHEST_BOAT) ||
                 entityType.equals(EntityType.SPRUCE_CHEST_BOAT))
             {
                 return InventoryRenderType.FIXED_27;
@@ -611,6 +635,14 @@ public class InventoryOverlay
             else if (entityType.equals(EntityType.PLAYER))
             {
                 return InventoryRenderType.PLAYER;
+            }
+            else if (entityType.equals(EntityType.ARMOR_STAND))
+            {
+                return InventoryRenderType.ARMOR_STAND;
+            }
+            else if (nbt.contains(NbtKeys.ATTRIB) || nbt.contains(NbtKeys.EFFECTS) || nbt.contains(NbtKeys.ARMOR_ITEMS))
+            {
+                return InventoryRenderType.LIVING_ENTITY;
             }
         }
 
@@ -849,7 +881,7 @@ public class InventoryOverlay
             {
                 for (int column = 0; column < slotsPerRow && slot < slots && i < maxSlots; ++column, ++slot, ++i)
                 {
-                    ItemStack stack = inv.getStack(slot);
+                    ItemStack stack = inv.getStack(slot).copy();
 
                     if (disabledSlots.contains(slot))
                     {
@@ -875,7 +907,8 @@ public class InventoryOverlay
             var stack = hoveredStack.copy();
             hoveredStack = null;
             // Some mixin / side effects can happen here
-            drawContext.drawItemTooltip(mc.textRenderer, stack, (int) mouseX, (int) mouseY);
+            //drawContext.drawItemTooltip(mc.textRenderer, stack, (int) mouseX, (int) mouseY);
+            renderStackToolTipStyled((int) mouseX, (int) mouseY, stack, mc, drawContext);
         }
     }
 
@@ -893,7 +926,7 @@ public class InventoryOverlay
 
             if (stack.isEmpty() == false)
             {
-                renderStackAt(stack, x + xOff + 1, y + yOff + 1, 1, mc, drawContext, mouseX, mouseY);
+                renderStackAt(stack.copy(), x + xOff + 1, y + yOff + 1, 1, mc, drawContext, mouseX, mouseY);
             }
         }
 
@@ -901,14 +934,14 @@ public class InventoryOverlay
 
         if (stack.isEmpty() == false)
         {
-            renderStackAt(stack, x + 28, y + 2 * 18 + 7 + 1, 1, mc, drawContext, mouseX, mouseY);
+            renderStackAt(stack.copy(), x + 28, y + 2 * 18 + 7 + 1, 1, mc, drawContext, mouseX, mouseY);
         }
 
         stack = entity.getEquippedStack(EquipmentSlot.OFFHAND);
 
         if (stack.isEmpty() == false)
         {
-            renderStackAt(stack, x + 28, y + 3 * 18 + 7 + 1, 1, mc, drawContext, mouseX, mouseY);
+            renderStackAt(stack.copy(), x + 28, y + 3 * 18 + 7 + 1, 1, mc, drawContext, mouseX, mouseY);
         }
 
         if (hoveredStack != null)
@@ -916,7 +949,8 @@ public class InventoryOverlay
             stack = hoveredStack.copy();
             hoveredStack = null;
             // Some mixin / side effects can happen here, so reset hoveredStack
-            drawContext.drawItemTooltip(mc.textRenderer, stack, (int) mouseX, (int) mouseY);
+            //drawContext.drawItemTooltip(mc.textRenderer, stack, (int) mouseX, (int) mouseY);
+            renderStackToolTipStyled((int) mouseX, (int) mouseY, stack, mc, drawContext);
         }
     }
 
@@ -953,7 +987,7 @@ public class InventoryOverlay
         {
             for (int column = 0; column < slotsPerRow && slot < slots && i < maxSlots; ++column, ++slot, ++i)
             {
-                ItemStack stack = items.get(slot);
+                ItemStack stack = items.get(slot).copy();
 
                 if (disabledSlots.contains(slot))
                 {
@@ -1066,11 +1100,23 @@ public class InventoryOverlay
         }
     }
 
+    /**
+     * This is a more "basic" hover tooltip
+     * @param x
+     * @param y
+     * @param stack
+     * @param mc
+     * @param drawContext
+     */
     public static void renderStackToolTip(int x, int y, ItemStack stack, MinecraftClient mc, DrawContext drawContext)
     {
-        List<Text> list = stack.getTooltip(Item.TooltipContext.DEFAULT, mc.player, mc.options.advancedItemTooltips ? TooltipType.ADVANCED : TooltipType.BASIC);
+        List<Text> list = stack.getTooltip(Item.TooltipContext.create(mc.world), mc.player, mc.options.advancedItemTooltips ? TooltipType.ADVANCED : TooltipType.BASIC);
         List<String> lines = new ArrayList<>();
 
+        if (MaLiLibReference.DEBUG_MODE)
+        {
+            dumpStack(stack, list);
+        }
         for (int i = 0; i < list.size(); ++i)
         {
             if (i == 0)
@@ -1084,6 +1130,57 @@ public class InventoryOverlay
         }
 
         RenderUtils.drawHoverText(x, y, lines, drawContext);
+    }
+
+    /**
+     * This is a more Advanced version, with full Color Style, etc; just like Vanilla's display.
+     * This should even be able to display the Bundle pop up interface.
+     * @param x
+     * @param y
+     * @param stack
+     * @param mc
+     * @param drawContext
+     */
+    public static void renderStackToolTipStyled(int x, int y, ItemStack stack, MinecraftClient mc, DrawContext drawContext)
+    {
+        if (stack.isEmpty() == false && mc.world != null && mc.player != null)
+        {
+            // Not sure why getBestWorld() is required here,
+            // it's also required when connected to a server;
+            // or else not be able to see Enchantment tooltips. (>.>)
+            List<Text> toolTips = stack.getTooltip(Item.TooltipContext.create(WorldUtils.getBestWorld(mc)), mc.player, mc.options.advancedItemTooltips ? TooltipType.ADVANCED : TooltipType.BASIC);
+            if (MaLiLibReference.DEBUG_MODE)
+            {
+                dumpStack(stack, toolTips);
+            }
+            drawContext.drawTooltip(mc.textRenderer,
+                                    toolTips,
+                                    stack.getTooltipData(), // Bundle/Optional Data
+                                    x, y,
+                                    stack.get(DataComponentTypes.TOOLTIP_STYLE));
+        }
+    }
+
+    private static void dumpStack(ItemStack stack, @Nullable List<Text> list)
+    {
+        if (stack.isEmpty())
+        {
+            System.out.printf("dumpStack(): [%s]\n", ItemStack.EMPTY.toString());
+            return;
+        }
+
+        System.out.printf("dumpStack(): [%s]\n", stack.toNbt(WorldUtils.getBestWorld(GameWrap.getClient()).getRegistryManager()).toString());
+
+        if (list != null && !list.isEmpty())
+        {
+            int i = 0;
+
+            for (Text entry : list)
+            {
+                System.out.printf("ToolTip[%d]: %s\n", i, entry.getString());
+                i++;
+            }
+        }
     }
 
     public static class InventoryProperties
@@ -1114,6 +1211,8 @@ public class InventoryOverlay
         BOOKSHELF,
         SINGLE_ITEM,
         BUNDLE,
+        ARMOR_STAND,
+        LIVING_ENTITY,
         GENERIC;
     }
 

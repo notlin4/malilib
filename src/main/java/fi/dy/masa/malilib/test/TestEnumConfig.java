@@ -22,7 +22,8 @@ import fi.dy.masa.malilib.util.StringUtils;
 public enum TestEnumConfig implements IHotkeyTogglable, IConfigNotifiable<IConfigBoolean>
 {
     TEST_ENUM_CONFIG        ("testEnumConfig",      false,""),
-    TEST_ENUM_SINGLE_PLAYER ("testEnumSinglePlayer",false,true, "");
+    TEST_ENUM_SINGLE_PLAYER ("testEnumSinglePlayer",false,true, ""),
+    TEST_WALLS_HOTKEY       ("testWallsHotkey",     false,"");
 
     private final static String TEST_ENUM_KEY = MaLiLibReference.MOD_ID + ".config.test_enum";
 
@@ -268,12 +269,12 @@ public enum TestEnumConfig implements IHotkeyTogglable, IConfigNotifiable<IConfi
             }
             else
             {
-                MaLiLib.logger.warn("Failed to set config value for '{}' from the JSON element '{}'", this.getName(), element);
+                MaLiLib.LOGGER.warn("Failed to set config value for '{}' from the JSON element '{}'", this.getName(), element);
             }
         }
         catch (Exception e)
         {
-            MaLiLib.logger.warn("Failed to set config value for '{}' from the JSON element '{}'", this.getName(), element, e);
+            MaLiLib.LOGGER.warn("Failed to set config value for '{}' from the JSON element '{}'", this.getName(), element, e);
         }
     }
 }
